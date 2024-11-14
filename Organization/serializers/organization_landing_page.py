@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Organization.models import OrganizationLandingPage
+from Organization.models.models import OrganizationLandingPage
 from .organization_sr import OrganizationSerializerForLanding
 
 
