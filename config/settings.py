@@ -18,6 +18,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
+    'Education',
+    'Students',
+    'Users',
+    'Organization',
 ]
 
 MIDDLEWARE = [
