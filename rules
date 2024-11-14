@@ -1,0 +1,7 @@
+har doim yangi kutubxona qoshilganda -> pip freeze > requirements.txt
+har bita funksiyaga comment:
+def sample():
+    """
+    comment
+    """
+

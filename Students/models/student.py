@@ -1,4 +1,10 @@
 from django.db import models
+from Organization.models import OrganizationType
+
+
+class Shift(models.Model):
+    name = models.CharField(max_length=250, null=True)
+    organization_type = models.ForeignKey(OrganizationType, on_delete=models.SET_NULL, null=True)
 
 
 class Student(models.Model):
