@@ -32,6 +32,15 @@ class OrganizationGallery(models.Model):
     organization_id = models.BigIntegerField()
 
 
+class OrganizationLandingPage(models.Model):
+    organization_id = models.ForeignKey("Organization", on_delete=models.CASCADE, related_name="landing_pages")
+    year_id = models.ForeignKey("AcademicYear", on_delete=models.CASCADE, related_name="landing_pages")
+    desc = models.TextField()
+    name_optional = models.CharField(null=True, blank=True)
+    expire_date = models.DateField()
+    degree_id = models.ForeignKey("OrganizationDegrees", on_delete=models.SET_NULL, null=True, blank=True)
+
+
 class GrantShift(models.Model):
     shift_id = models.ForeignKey('Shift', on_delete=models.CASCADE, related_name="grant_shifts")
     duration = models.IntegerField()
@@ -61,12 +70,3 @@ class LandingPageShift(models.Model):
     price = models.BigIntegerField()
     landing_page = models.ForeignKey('OrganizationLandingPage', on_delete=models.CASCADE, related_name="shifts")
     duration = models.IntegerField()
-
-
-class OrganizationLandingPage(models.Model):
-    organization_id = models.ForeignKey("Organization", on_delete=models.CASCADE, related_name="landing_pages")
-    year_id = models.ForeignKey("AcademicYear", on_delete=models.CASCADE, related_name="landing_pages")
-    desc = models.TextField()
-    name_optional = models.CharField(null=True, blank=True)
-    expire_date = models.DateField()
-    degree_id = models.ForeignKey("OrganizationDegrees", on_delete=models.SET_NULL, null=True, blank=True)
