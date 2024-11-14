@@ -8,9 +8,9 @@ class Shift(models.Model):
 
 
 class Student(models.Model):
-    user = models.ForeignKey('Users.Users', on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey('Users.Users', on_delete=models.SET_NULL)
     certificate = models.FileField(upload_to='certificate/', null=True, blank=True)
-    region = models.ForeignKey('Students.region', on_delete=models.SET_NULL,null=True, blank=True)
+    region = models.ForeignKey('Students.region', on_delete=models.SET_NULL)
     education_name = models.CharField(max_length=250, null=True)
     education_type = models.CharField(max_length=250, null=True)
     education_address = models.CharField(max_length=250, null=True)
