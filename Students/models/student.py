@@ -1,4 +1,6 @@
 from django.db import models
+
+
 # from Organization.models.models import OrganizationType
 
 
@@ -10,7 +12,7 @@ class Shift(models.Model):
 class Student(models.Model):
     user = models.ForeignKey('Users.Users', on_delete=models.SET_NULL, null=True, blank=True)
     certificate = models.FileField(upload_to='certificate/', null=True, blank=True)
-    region = models.ForeignKey('Students.region', on_delete=models.SET_NULL,null=True, blank=True)
+    region = models.ForeignKey('Students.region', on_delete=models.SET_NULL, null=True, blank=True)
     education_name = models.CharField(max_length=250, null=True)
     education_type = models.CharField(max_length=250, null=True)
     education_address = models.CharField(max_length=250, null=True)
@@ -19,13 +21,14 @@ class Student(models.Model):
 
 class StudentRequest(models.Model):
     date = models.DateField()
-    student_id = models.ForeignKey('Students.student', on_delete=models.SET_NULL, null=True, blank=True)
-    organization_id = models.BigIntegerField()
-    shift_id = models.BigIntegerField()
-    field_id = models.BigIntegerField()
-    language_id = models.ForeignKey('Education.EducationLanguage', on_delete=models.SET_NULL, null=True, blank=True) #language qushilsa ulavorish kerak
+    student = models.ForeignKey('Students.student', on_delete=models.SET_NULL, null=True, blank=True)
+    organization = models.ForeignKey('Organization.Organization', on_delete=models.SET_NULL, null=True, )
+    shift = models.ForeignKey('Students.Shift', on_delete=models.SET_NULL, null=True, blank=True)
+    field = models.ForeignKey('Organization.OrganizationFields', on_delete=models.SET_NULL, null=True, blank=True)
+    language = models.ForeignKey('Education.EducationLanguage', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
     request_status = models.BigIntegerField()
-    year_id = models.BigIntegerField()
+    year = models.ForeignKey('Students.AcademicYear', on_delete=models.SET_NULL, null=True, blank=True)
     accepted = models.BooleanField(default=False)
     canceled = models.BooleanField(default=False)
     back_recovery = models.BooleanField(default=False)
@@ -35,7 +38,7 @@ class StudentRequest(models.Model):
     contract_given = models.BooleanField(default=False)
     payed_status = models.BooleanField(default=False)
     accepted_to_study = models.BooleanField(default=False)
-    degree_id = models.BigIntegerField()
+    degree = models.ForeignKey('Organization.OrganizationDegrees', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"StudentRequest {self.id}"
