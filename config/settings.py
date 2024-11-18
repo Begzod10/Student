@@ -3,6 +3,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-x8p_w1cymrqrta$7y!il0$k(-y0hi=log22cu7m#y5g1drwhid'
+from datetime import timedelta
 
 DEBUG = True
 
@@ -23,10 +24,15 @@ INSTALLED_APPS = [
     'organization',
     'students',
     'django_filters',
+    'rest_framework_simplejwt',
+
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
 MIDDLEWARE = [
@@ -71,6 +77,15 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     }
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
 }
 
 AUTH_PASSWORD_VALIDATORS = [

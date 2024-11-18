@@ -6,6 +6,7 @@ class Users(AbstractUser):
     name = models.CharField(max_length=255, null=True)
     surname = models.CharField(max_length=255, null=True)
     username = models.CharField(max_length=255, unique=True, null=True)
+
     last_name = models.CharField(max_length=255, null=True)
     SEX_CHOICES = (
         ('erkak', 'Erkak'),
@@ -15,7 +16,7 @@ class Users(AbstractUser):
     born_date = models.DateField(null=True)
     born_address = models.CharField(max_length=255, null=True)
     indefikatsiya_pin = models.CharField(max_length=255, null=True)
-    phone = models.CharField(max_length=255, null=True)
+    phone = models.CharField(max_length=255, null=True,unique=True)
     passport_pdf1 = models.FileField(upload_to='passport/', null=True, blank=True)
     passport_pdf2 = models.FileField(upload_to='passport/', null=True, blank=True)
     ROLE_CHOICES = (
@@ -26,6 +27,8 @@ class Users(AbstractUser):
     email = models.EmailField(unique=True,null=True)
     phone_extra = models.CharField(max_length=255, null=True)
     passport_seria = models.CharField(max_length=255, null=True)
+    USERNAME_FIELD = 'phone'
+
     groups = models.ManyToManyField(
         Group,
         related_name="customuser_groups",
