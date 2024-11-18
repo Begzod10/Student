@@ -20,14 +20,15 @@ class Student(models.Model):
 
 
 class StudentRequest(models.Model):
-    date = models.DateField()
-    student_id = models.ForeignKey('Students.student', on_delete=models.SET_NULL, null=True, blank=True)
-    organization_id = models.BigIntegerField()
-    shift_id = models.BigIntegerField()
-    field_id = models.BigIntegerField()
-    language_id = models.ForeignKey('Education.EducationLanguage', on_delete=models.SET_NULL, null=True, blank=True)
+    date = models.DateField(auto_now_add=True)
+    student = models.ForeignKey('Students.student', on_delete=models.SET_NULL, null=True, blank=True)
+    organization = models.ForeignKey('Organization.Organization', on_delete=models.SET_NULL, null=True, )
+    shift = models.ForeignKey('Students.Shift', on_delete=models.SET_NULL, null=True, blank=True)
+    field = models.ForeignKey('Organization.OrganizationFields', on_delete=models.SET_NULL, null=True, blank=True)
+    language = models.ForeignKey('Education.EducationLanguage', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
     request_status = models.BigIntegerField()
-    year_id = models.BigIntegerField()
+    year = models.ForeignKey('Students.AcademicYear', on_delete=models.SET_NULL, null=True, blank=True)
     accepted = models.BooleanField(default=False)
     canceled = models.BooleanField(default=False)
     back_recovery = models.BooleanField(default=False)
@@ -37,7 +38,7 @@ class StudentRequest(models.Model):
     contract_given = models.BooleanField(default=False)
     payed_status = models.BooleanField(default=False)
     accepted_to_study = models.BooleanField(default=False)
-    degree_id = models.BigIntegerField()
+    degree = models.ForeignKey('Organization.OrganizationDegrees', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"StudentRequest {self.id}"
