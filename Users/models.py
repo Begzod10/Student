@@ -6,6 +6,7 @@ class Users(AbstractUser):
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     username = models.CharField(max_length=255, unique=True)
+    last_name = models.CharField(max_length=255)
     SEX_CHOICES = (
         ('male', 'Male'),
         ('female', 'Female'),
