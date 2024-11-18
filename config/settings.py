@@ -19,9 +19,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'Education',
-    'Students',
     'Users',
     'Organization',
+    'Students',
+
 ]
 
 MIDDLEWARE = [

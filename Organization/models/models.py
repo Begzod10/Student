@@ -62,7 +62,7 @@ class OrganizationAdvantage(models.Model):
 
 
 class GrantField(models.Model):
-    # field_id = models.ForeignKey('', on_delete=models.CASCADE)
+    field_id = models.ForeignKey('Organization.OrganizationFields', on_delete=models.CASCADE)
     ball = models.IntegerField()
     desc_optional = models.TextField(null=True, blank=True)
     grant = models.ForeignKey(LandingPageGrant, on_delete=models.CASCADE)
@@ -73,3 +73,9 @@ class LandingPageShift(models.Model):
     price = models.BigIntegerField()
     landing_page = models.ForeignKey('OrganizationLandingPage', on_delete=models.CASCADE)
     duration = models.IntegerField()
+
+
+class OrganizationAdvantages(models.Model):
+    name = models.CharField(max_length=250, null=True)
+    desc = models.TextField()
+    file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True)

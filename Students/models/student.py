@@ -1,5 +1,5 @@
 from django.db import models
-# from Organization.models import OrganizationType
+# from Organization.models.models import OrganizationType
 
 
 class Shift(models.Model):
@@ -23,7 +23,7 @@ class StudentRequest(models.Model):
     organization_id = models.BigIntegerField()
     shift_id = models.BigIntegerField()
     field_id = models.BigIntegerField()
-    # language_id = models.ForeignKey('Students.language', on_delete=models.SET_NULL, null=True, blank=True) #language qushilsa ulavorish kerak
+    language_id = models.ForeignKey('Education.EducationLanguage', on_delete=models.SET_NULL, null=True, blank=True) #language qushilsa ulavorish kerak
     request_status = models.BigIntegerField()
     year_id = models.BigIntegerField()
     accepted = models.BooleanField(default=False)

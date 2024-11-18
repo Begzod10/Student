@@ -8,3 +8,4 @@ frontend/build
 transfer
 transfer/
 data
+*.py~
