@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Students.models.student import StudentRequest
+from students.models.student import StudentRequest
 
 
 class StudentRequestSerializerRetrieve(serializers.ModelSerializer):

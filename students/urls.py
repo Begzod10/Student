@@ -1,5 +1,5 @@
 from django.urls import path
-from Students.views import StudentRequestListView, StudentRequestRetrieveView, student_request_dashboard
+from organization.views import StudentRequestListView, StudentRequestRetrieveView, student_request_dashboard
 from django.contrib import admin
 from django.urls import path, include
 

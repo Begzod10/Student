@@ -1,8 +1,8 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from Students.models.student import StudentRequest
-from Students.serializers.student import StudentRequestSerializerList, StudentRequestSerializerRetrieve
+from students.models.student import StudentRequest
+from students.serializers.student import StudentRequestSerializerList, StudentRequestSerializerRetrieve
 from rest_framework.decorators import api_view
 from django.db.models import Count, Q
 
