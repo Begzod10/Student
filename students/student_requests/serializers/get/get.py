@@ -48,12 +48,22 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
     degree = serializers.CharField(source='degree.name')
     shift = serializers.CharField(source='shift.name')
     language = serializers.CharField(source='language.name')
+    field = serializers.CharField(source='field.name')
 
     # direction ta'lim yo'nalishi xali qoshilmadi
 
     class Meta:
         model = StudentRequest
-        fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date']
+        fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date', 'accepted', 'field']
 
     def get_name(self, obj):
-        return f'{obj.student.user.name} {obj.student.user.surname} {obj.student.user.last_name}'
+        name_parts = []
+
+        if obj.student.user.name:
+            name_parts.append(obj.student.user.name)
+        if obj.student.user.surname:
+            name_parts.append(obj.student.user.surname)
+        if obj.student.user.last_name:
+            name_parts.append(obj.student.user.last_name)
+
+        return ' '.join(name_parts)
