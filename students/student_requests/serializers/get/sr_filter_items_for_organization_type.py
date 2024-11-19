@@ -9,7 +9,7 @@ from education.models import EducationLanguage
 class FilterItemsForOrganizationTypeSerializer(serializers.Serializer):
 
     def to_representation(self, obj):
-        type_id = self.context.get('type_id', None)
+        type_id = self.context.get('type_id')
         types = OrganizationType.objects.all()
         if type_id:
             degrees = OrganizationDegrees.objects.filter(organization_type_id=type_id).all()

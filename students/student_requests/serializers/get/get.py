@@ -56,4 +56,4 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date']
 
     def get_name(self, obj):
-        return f'{obj.student.user.name} {obj.student.user.surname} {obj.student.user.lastname}'
+        return f'{obj.student.user.name} {obj.student.user.surname} {obj.student.user.last_name}'
