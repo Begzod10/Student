@@ -3,29 +3,29 @@ from django.db import models
 
 
 class Users(AbstractUser):
-    name = models.CharField(max_length=255)
-    surname = models.CharField(max_length=255)
-    username = models.CharField(max_length=255, unique=True)
-    last_name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
+    surname = models.CharField(max_length=255, null=True)
+    username = models.CharField(max_length=255, unique=True, null=True)
+    last_name = models.CharField(max_length=255, null=True)
     SEX_CHOICES = (
-        ('male', 'Male'),
-        ('female', 'Female'),
+        ('erkak', 'Erkak'),
+        ('ayol', 'Ayol'),
     )
-    sex = models.CharField(max_length=255, choices=SEX_CHOICES)
-    born_date = models.DateField()
-    born_address = models.CharField(max_length=255)
-    indefikatsiya_pin = models.CharField(max_length=255)
-    phone = models.CharField(max_length=255)
+    sex = models.CharField(max_length=255, choices=SEX_CHOICES, null=True)
+    born_date = models.DateField(null=True)
+    born_address = models.CharField(max_length=255, null=True)
+    indefikatsiya_pin = models.CharField(max_length=255, null=True)
+    phone = models.CharField(max_length=255, null=True)
     passport_pdf1 = models.FileField(upload_to='passport/', null=True, blank=True)
     passport_pdf2 = models.FileField(upload_to='passport/', null=True, blank=True)
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('user', 'User'),
     )
-    role = models.CharField(max_length=255, choices=ROLE_CHOICES)
-    email = models.EmailField(unique=True)
-    phone_extra = models.CharField(max_length=255)
-    passport_seria = models.CharField(max_length=255)
+    role = models.CharField(max_length=255, choices=ROLE_CHOICES, default='user')
+    email = models.EmailField(unique=True,null=True)
+    phone_extra = models.CharField(max_length=255, null=True)
+    passport_seria = models.CharField(max_length=255, null=True)
     groups = models.ManyToManyField(
         Group,
         related_name="customuser_groups",

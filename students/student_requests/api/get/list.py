@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from students.models.student import StudentRequest
 
-from students.student_requests.serializers.get import StudentRequestListSerializer
+from students.student_requests.serializers.get.get import StudentRequestListSerializer
 
 from students.student_requests.filters import StudentRequestFilter
 

@@ -4,6 +4,6 @@ from users.models import Users
 from users.user.serializers.crud.serializers import RegisterSerializer
 
 
-class Register(generics.CreateAPIView):
+class UpdateUserInfo(generics.UpdateAPIView):
     queryset = Users.objects.all()
     serializer_class = RegisterSerializer

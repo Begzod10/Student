@@ -89,7 +89,7 @@ class OrganizationAdvantage(models.Model):
 
 
 class GrantField(models.Model):
-    field_id = models.ForeignKey('Organization.OrganizationFields', on_delete=models.CASCADE)
+    field_id = models.ForeignKey('organization.OrganizationFields', on_delete=models.CASCADE)
     ball = models.IntegerField()
     desc_optional = models.TextField(null=True, blank=True)
     grant = models.ForeignKey(LandingPageGrant, on_delete=models.CASCADE)

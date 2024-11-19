@@ -12,7 +12,7 @@ class StudentRequestProfileSerializer(serializers.Serializer):
         return {
             'id': obj.id,
             'user': {
-                'name': f'{obj.student.user.name} {obj.student.user.surname or ""} {obj.student.user.lastname or ""}'.strip(),
+                'name': f'{obj.student.user.name} {obj.student.user.surname or ""} {obj.student.user.last_name or ""}'.strip(),
                 'phone': obj.student.user.phone,
                 'phone_extra': obj.student.user.phone_extra or "N/A",
                 'email': obj.student.user.email
@@ -34,7 +34,6 @@ class StudentRequestProfileSerializer(serializers.Serializer):
                 'locations': obj.organization.locations,
                 'desc': obj.organization.desc,
                 'phone': obj.organization.phone,
-                'img': obj.organization.img,
                 'organization_type': obj.organization.organization_type.name,
                 'region': obj.organization.region.name
             },

@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from students.models.student import StudentRequest
 
-from students.student_requests.serializers.crud import StudentRequestCreateUpdateSerializer
+from students.student_requests.serializers.crud.crud import StudentRequestCreateUpdateSerializer
 
 
 class StudentRequestDestroyView(generics.DestroyAPIView):
