@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from organization.models.models import OrganizationDegrees, OrganizationType
-from organization.models.organization_fields import OrganizationFields
+from organizations.models.models import OrganizationDegrees, OrganizationType
+from organizations.models.organization_fields import OrganizationFields
 from students.models.student import Shift
 from education.models import EducationLanguage
 

@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'education',
     'users',
-    'organization',
+    'organizations',
     'students',
     'django_filters',
     'rest_framework_simplejwt',

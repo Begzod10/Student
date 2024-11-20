@@ -1,12 +1,12 @@
 from django.db import models
 
 
-# from organization.models.models import OrganizationType
+# from organizations.models.models import OrganizationType
 
 
 class Shift(models.Model):
     name = models.CharField(max_length=250, null=True)
-    organization_type = models.ForeignKey('organization.OrganizationType', on_delete=models.SET_NULL, null=True)
+    organization_type = models.ForeignKey('organizations.OrganizationType', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         app_label = 'students'
@@ -28,9 +28,9 @@ class Student(models.Model):
 class StudentRequest(models.Model):
     date = models.DateField(auto_now_add=True)
     student = models.ForeignKey('students.student', on_delete=models.SET_NULL, null=True, blank=True)
-    organization = models.ForeignKey('organization.Organization', on_delete=models.SET_NULL, null=True)
+    organization = models.ForeignKey('organizations.Organization', on_delete=models.SET_NULL, null=True)
     shift = models.ForeignKey('students.Shift', on_delete=models.SET_NULL, null=True, blank=True)
-    field = models.ForeignKey('organization.OrganizationFields', on_delete=models.SET_NULL, null=True, blank=True)
+    field = models.ForeignKey('organizations.OrganizationFields', on_delete=models.SET_NULL, null=True, blank=True)
     language = models.ForeignKey('education.EducationLanguage', on_delete=models.SET_NULL, null=True,
                                  blank=True)
     request_status = models.BigIntegerField()
@@ -44,7 +44,7 @@ class StudentRequest(models.Model):
     contract_given = models.BooleanField(default=False)
     payed_status = models.BooleanField(default=False)
     accepted_to_study = models.BooleanField(default=False)
-    degree = models.ForeignKey('organization.OrganizationDegrees', on_delete=models.SET_NULL, null=True, blank=True)
+    degree = models.ForeignKey('organizations.OrganizationDegrees', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"StudentRequest {self.id}"

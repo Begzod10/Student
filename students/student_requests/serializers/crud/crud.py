@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from students.models.student import StudentRequest, Student, Shift
 from students.models.academic_year import AcademicYear
-from organization.models.models import Organization
-from organization.models.organization_fields import OrganizationFields
+from organizations.models.models import Organization
+from organizations.models.organization_fields import OrganizationFields
 from education.models import EducationLanguage
 
 

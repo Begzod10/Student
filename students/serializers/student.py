@@ -17,15 +17,15 @@ class StudentRequestSerializerRetrieve(serializers.ModelSerializer):
         model = StudentRequest
         fields = [
             'id',
-            'name'
-            'phone'
-            'phone_extra'
-            'email'
-            'passport_seria'
-            'sex'
-            'indefikatsiya_pin'
-            'born_address'
-            'born_date'
+            'name',
+            'phone',
+            'phone_extra',
+            'email',
+            'passport_seria',
+            'sex',
+            'indefikatsiya_pin',
+            'born_address',
+            'born_date',
         ]
 
     def get_name(self, object):
@@ -40,8 +40,8 @@ class StudentRequestSerializerList(serializers.ModelSerializer):
         model = StudentRequest
         fields = [
             'id',
-            'name'
-            'phone'
+            'name',
+            'phone',
         ]
 
     def get_name(self, object):

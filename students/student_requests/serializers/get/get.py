@@ -29,7 +29,7 @@ class StudentRequestProfileSerializer(serializers.Serializer):
                 'sex': obj.student.user.sex,
                 'born_address': obj.student.user.born_address
             },
-            'organization': {
+            'organizations': {
                 'name': obj.organization.name,
                 'locations': obj.organization.locations,
                 'desc': obj.organization.desc,
