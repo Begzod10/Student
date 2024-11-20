@@ -4,18 +4,21 @@ from organizations.models.organization_landing_page import OrganizationLandingPa
 from organizations.organization.serializers.get.retrieve_view import OrganizationSerializerForLanding
 from students.models.academic_year import AcademicYear
 from organizations.models.models import OrganizationDegrees
+from organizations.organization_degree.serializers.get.retrieve_view import OrganizationDegreesRetrieveSerializer
+from students.academic_year.serializers.get.retrieve_view import AcademicYearRetrieveSerializer
 
 
 class OrganizationLandingPageSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializerForLanding()
+    year = AcademicYearRetrieveSerializer()
+    degree = OrganizationDegreesRetrieveSerializer()
 
-    # degree =
     class Meta:
         model = OrganizationLandingPage
         fields = [
             'id',
             'organization',
-            'year_id',
+            'year',
             'desc',
             'name_optional',
             'expire_date',
