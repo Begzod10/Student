@@ -14,5 +14,9 @@ urlpatterns = [
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/organizations/', include('organizations.urls')),
+    path('api/organization-degrees/', include('organizations.organization_degree.api.urls')),
+    path('api/region/', include('students.region.api.urls')),
+    path('api/shift/', include('students.shift.api.urls')),
+    path('api/education_language/', include('education.education.api.urls')),
 
 ]
