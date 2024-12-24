@@ -21,15 +21,7 @@ class OrganizationLandingPage(models.Model):
 class GrantShift(models.Model):
     shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE)
     duration = models.IntegerField()
-    grant = models.ForeignKey('LandingPageGrant', on_delete=models.CASCADE)
-
-    class Meta:
-        app_label = 'organizations'
-
-
-class LandingPageGrant(models.Model):
-    landing_page = models.ForeignKey('OrganizationLandingPage', on_delete=models.CASCADE)
-    desc = models.TextField()
+    landing_page = models.ForeignKey('OrganizationLandingPage', on_delete=models.CASCADE, default=None)
 
     class Meta:
         app_label = 'organizations'
@@ -48,7 +40,7 @@ class GrantField(models.Model):
     field_id = models.ForeignKey('organizations.OrganizationFields', on_delete=models.CASCADE)
     ball = models.IntegerField()
     desc_optional = models.TextField(null=True, blank=True)
-    grant = models.ForeignKey(LandingPageGrant, on_delete=models.CASCADE)
+    landing_page = models.ForeignKey(OrganizationLandingPage, on_delete=models.CASCADE, default=None)
 
     class Meta:
         app_label = 'organizations'
