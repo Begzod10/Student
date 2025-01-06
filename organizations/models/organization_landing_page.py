@@ -4,11 +4,13 @@ from students.models.academic_year import AcademicYear
 from students.models.region import Region
 from students.models.student import Shift
 from organizations.models.models import File
+from education.models import EducationLanguage
 
 
 class OrganizationLandingPage(models.Model):
     organization_id = models.ForeignKey("Organization", on_delete=models.CASCADE)
-    year_id = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
+    education_language = models.ForeignKey(EducationLanguage, on_delete=models.CASCADE)
+    year_id = models.ForeignKey(AcademicYear, on_delete=models.CASCADE, null=True)
     desc = models.TextField()
     name_optional = models.CharField(null=True, blank=True)
     expire_date = models.DateField()

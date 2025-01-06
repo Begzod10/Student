@@ -6,18 +6,21 @@ from students.models.academic_year import AcademicYear
 from organizations.models.models import OrganizationDegrees
 from organizations.organization_degree.serializers.get.retrieve_view import OrganizationDegreesRetrieveSerializer
 from students.academic_year.serializers.get.retrieve_view import AcademicYearRetrieveSerializer
+from education.education.serializers.get.retriviev import EducationSerializer
 
 
 class OrganizationLandingPageSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializerForLanding()
     year = AcademicYearRetrieveSerializer()
     degree = OrganizationDegreesRetrieveSerializer()
+    education_language = EducationSerializer()
 
     class Meta:
         model = OrganizationLandingPage
         fields = [
             'id',
             'organization',
+            'education_language',
             'year',
             'desc',
             'name_optional',
