@@ -11,6 +11,6 @@ urlpatterns = [
     path('update/<int:pk>', StudentRequestCreateView.as_view(), name='update'),
     path('delete/<int:pk>', StudentRequestDestroyView.as_view(), name='delete'),
     path('profile/<int:pk>', StudentRequestProfileView.as_view(), name='profile'),
-    path('list/<int:pk>', StudentRequestListView.as_view(), name='list'),
+    path('list/', StudentRequestListView.as_view(), name='list'),
     path('filter_items/', FilterItemsForOrganizationTypeView.as_view(), name='list'),
 ]

@@ -6,6 +6,7 @@ from ...serializers.get.sr_filter_items_for_organization_type import FilterItems
 
 class FilterItemsForOrganizationTypeView(APIView):
     def get(self, request):
-        type_id = request.query_params.get('id', None)
+        type_id = request.query_params.get('type_id', None)
         serializer = FilterItemsForOrganizationTypeSerializer(context={'type_id': type_id})
-        return Response(serializer.data)
+        data = serializer.to_representation(None)
+        return Response(data)
