@@ -13,6 +13,13 @@ class StudentRequestListView(generics.ListAPIView):
     queryset = StudentRequest.objects.all()
     serializer_class = StudentRequestSerializerList
 
+    def get_queryset(self):
+        organization_id = self.request.query_params.get('organization_id', None)
+        if organization_id is not None:
+            return StudentRequest.objects.filter(organization_id=organization_id)
+        return None
+
+
 
 class StudentRequestRetrieveView(generics.RetrieveAPIView):
     # permission_classes = [IsAuthenticated]

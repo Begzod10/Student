@@ -9,7 +9,7 @@ from students.academic_year.serializers.get.retrieve_view import AcademicYearRet
 from education.education.serializers.get.retriviev import EducationSerializer
 
 
-class OrganizationLandingPageSerializer(serializers.ModelSerializer):
+class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializerForLanding()
     year = AcademicYearRetrieveSerializer()
     degree = OrganizationDegreesRetrieveSerializer()
@@ -22,6 +22,7 @@ class OrganizationLandingPageSerializer(serializers.ModelSerializer):
             'organization',
             'education_language',
             'year',
+            'deleted',
             'desc',
             'name_optional',
             'expire_date',
@@ -45,3 +46,8 @@ class OrganizationLandingPageSerializer(serializers.ModelSerializer):
         instance.degree_id = get_degree
         instance.save()
         return instance  # Return the updated instance
+
+    def delete(self, *args, **kwargs):
+        """Override the delete method to mark the instance as deleted."""
+        self.deleted = True
+        self.save()
