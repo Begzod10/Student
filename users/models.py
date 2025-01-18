@@ -22,6 +22,7 @@ class Users(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('user', 'User'),
+        ('organization_admin', 'Organization Admin'),
     )
     role = models.CharField(max_length=255, choices=ROLE_CHOICES, default='user')
     email = models.EmailField(unique=True,null=True)
