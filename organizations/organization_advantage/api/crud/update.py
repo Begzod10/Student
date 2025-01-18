@@ -7,3 +7,5 @@ class OrganizationAdvantageUpdateView(UpdateAPIView):
     # permission_classes = [IsAuthenticated]
     queryset = OrganizationAdvantage.objects.all()
     serializer_class = OrganizationAdvantageCreateUpdateSerializer
+
+

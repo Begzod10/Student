@@ -1,8 +1,7 @@
 from rest_framework.generics import UpdateAPIView
 from organizations.models import OrganizationGallery
 from organizations.models import File
-from organizations.organization_gallery.serializers.crud.crud import OrganizationGalleryCreateUpdateSerializer, \
-    FileCreateUpdateSerializer
+from organizations.organization_gallery.serializers.crud.crud import FileCreateUpdateSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
