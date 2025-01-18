@@ -29,18 +29,10 @@ class OrganizationGalleryCreateUpdateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        file_data = validated_data.pop('file', None)
-        print(f"File data received: {file_data}")
-
-        if file_data:
-            # Agar file_data File obyekti bo'lsa
-            if isinstance(file_data, File):  # file_data File obyekti bo'lsa
-                file_instance = file_data  # Faylni bevosita olish
-            else:
-                # Agar file_data boshqa formatda bo'lsa, ID yoki dict bo'lsa, uni olish kerak
-                raise ValueError("Invalid file data format, expected a File object.")
-
-            print(f"File instance: {file_instance}")  # Fayl obyektini tekshirish
+        file_id = validated_data.pop('file_id', None)
+        try:
+            file_instance = File.objects.get(id=file_id)
             validated_data['file'] = file_instance
-
+        except File.DoesNotExist:
+            raise serializers.ValidationError({"file_id": "File with the given ID does not exist."})
         return super().create(validated_data)
