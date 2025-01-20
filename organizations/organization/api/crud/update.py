@@ -7,3 +7,5 @@ from organizations.organization.serializers.get.retrieve_view import Organizatio
 class OrganizationUpdateApiView(generics.UpdateAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+
+
