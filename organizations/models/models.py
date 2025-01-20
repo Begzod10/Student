@@ -38,25 +38,16 @@ class Organization(models.Model):
 
 
 class File(models.Model):
-    type = models.CharField()
-    url = models.URLField()
+    type = models.CharField(max_length=255)  # Add max_length for better validation
+    url = models.FileField(upload_to='file/', null=True, blank=True)  # FileField for handling file uploads
 
     class Meta:
         app_label = 'organizations'
 
 
 class OrganizationGallery(models.Model):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
-    organization_id = models.BigIntegerField()
-
-    class Meta:
-        app_label = 'organizations'
-
-
-class OrganizationAdvantages(models.Model):
-    name = models.CharField(max_length=250, null=True)
-    desc = models.TextField()
-    file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True)
+    file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True)
+    organization = models.ForeignKey('Organization', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         app_label = 'organizations'

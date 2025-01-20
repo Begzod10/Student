@@ -1,6 +1,7 @@
-from organizations.models.models import OrganizationDegrees
 from rest_framework import serializers
 from organizations.organization_type.serializers.get.retrieve_view import OrganizationTypeSerializer
+
+from organizations.models.models import OrganizationDegrees
 
 
 class OrganizationDegreesRetrieveSerializer(serializers.ModelSerializer):

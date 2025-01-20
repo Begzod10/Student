@@ -5,6 +5,7 @@ from organizations.models.organization_landing_page import OrganizationLandingPa
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Organization
         fields = [
