@@ -23,6 +23,7 @@ class StudentRequestRetrieveView(generics.RetrieveAPIView):
 
 @api_view(['GET'])
 def student_request_dashboard(request):
+
     stats = StudentRequest.objects.aggregate(
         accepted=Count('id', filter=Q(accepted=True)),
         back_recovery=Count('id', filter=Q(back_recovery=True)),
