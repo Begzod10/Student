@@ -15,9 +15,10 @@ class OrganizationLandingPageSerializer(serializers.ModelSerializer):
             'desc',
             'name_optional',
             'expire_date',
-            'degree_id'
+            'degree_id',
+            'education_language'
         ]
-        depth = 1  # This will automatically include the related data for ForeignKey fields.
+        depth = 1
 
 
 class LandingPageShiftSerializer(serializers.ModelSerializer):

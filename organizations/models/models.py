@@ -8,6 +8,7 @@ from students.models.student import Shift
 class OrganizationType(models.Model):
     name = models.CharField(max_length=250, null=True)
     img = models.FileField(upload_to='organization_type/', null=True, blank=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'organizations'
@@ -16,6 +17,7 @@ class OrganizationType(models.Model):
 class OrganizationDegrees(models.Model):
     name = models.CharField(max_length=250, null=True)
     organization_type = models.ForeignKey(OrganizationType, on_delete=models.SET_NULL, null=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'organizations'

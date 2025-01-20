@@ -6,7 +6,6 @@ class Users(AbstractUser):
     name = models.CharField(max_length=255, null=True)
     surname = models.CharField(max_length=255, null=True)
     username = models.CharField(max_length=255, unique=True, null=True)
-
     last_name = models.CharField(max_length=255, null=True)
     SEX_CHOICES = (
         ('erkak', 'Erkak'),
@@ -22,6 +21,7 @@ class Users(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('user', 'User'),
+        ('organization_admin', 'Organization Admin'),
     )
     role = models.CharField(max_length=255, choices=ROLE_CHOICES, default='user')
     email = models.EmailField(unique=True,null=True)
