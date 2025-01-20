@@ -26,7 +26,7 @@ class OrganizationDegrees(models.Model):
 class Organization(models.Model):
     name = models.CharField(max_length=250, null=True)
     locations = models.CharField(max_length=250, null=True)
-    desc = models.CharField(max_length=250, null=True)
+    desc = models.TextField (null=True)
     phone = models.CharField(max_length=250, null=True)
     img = models.FileField(upload_to='organizations/', null=True, blank=True)
     organization_type = models.ForeignKey(OrganizationType, on_delete=models.SET_NULL, null=True)
