@@ -7,13 +7,15 @@ from organizations.models.models import File
 
 
 class OrganizationLandingPage(models.Model):
-    organization_id = models.ForeignKey("Organization", on_delete=models.CASCADE)
-    year_id = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE)
+    year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
     desc = models.TextField()
     name_optional = models.CharField(null=True, blank=True)
     expire_date = models.DateField()
-    degree_id = models.ForeignKey("OrganizationDegrees", on_delete=models.SET_NULL, null=True, blank=True)
+    start_date = models.DateField(null=True)
+    degree = models.ForeignKey("OrganizationDegrees", on_delete=models.SET_NULL, null=True, blank=True)
     grant = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'organizations'
