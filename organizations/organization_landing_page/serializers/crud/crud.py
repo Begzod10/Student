@@ -29,7 +29,6 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
             'education_language',
             'year',
             'desc',
-            'name_optional',
             'expire_date',
             'degree',
             'grant',
