@@ -30,25 +30,3 @@ class OrganizationAdvantage(models.Model):
 
     class Meta:
         app_label = 'organizations'
-
-
-class GrantField(models.Model):
-    field_id = models.ForeignKey('organizations.OrganizationFields', on_delete=models.CASCADE)
-    ball = models.IntegerField()
-    desc_optional = models.TextField(null=True, blank=True)
-    shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE, default=None)
-    duration = models.IntegerField(default=0)
-    landing_page = models.ForeignKey(OrganizationLandingPage, on_delete=models.CASCADE, default=None)
-
-    class Meta:
-        app_label = 'organizations'
-
-
-class LandingPageShift(models.Model):
-    shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE)
-    price = models.BigIntegerField()
-    landing_page = models.ForeignKey('OrganizationLandingPage', on_delete=models.CASCADE)
-    duration = models.IntegerField()
-
-    class Meta:
-        app_label = 'organizations'

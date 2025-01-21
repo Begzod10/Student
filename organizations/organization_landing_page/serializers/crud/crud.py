@@ -61,3 +61,9 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+    def delete(self, *args, **kwargs):
+        """Override the delete method to mark the instance as deleted."""
+        self.deleted = True
+        self.save()
+        return True

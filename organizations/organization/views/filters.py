@@ -6,10 +6,9 @@ from organizations.models import (
     OrganizationFields,
     OrganizationDegrees,
 )
-from organizations.models.organization_landing_page import LandingPageShift, OrganizationLandingPage
+from organizations.models.organization_landing_page import OrganizationLandingPage
 from organizations.organization_degree.serializers.get.retrieve_view import OrganizationDegreesRetrieveSerializer
-from organizations.organization_landing_page.serializers.get.retrieve_view import OrganizationLandingPageSerializer, \
-    LandingPageShiftSerializer
+from organizations.organization_landing_page.serializers.get.retrieve_view import OrganizationLandingPageSerializer
 from organizations.organization_fields.serializers.get.retrieve_view import OrganizationFieldsSerializer
 
 
@@ -20,11 +19,9 @@ def organizations_filter(request, pk):
         organizations = Organization.objects.filter(organization_type=organization_type)
         organization_fields = OrganizationFields.objects.filter(organization_type=organization_type)
         organization_degrees = OrganizationDegrees.objects.filter(organization_type=organization_type)
-        shifts = LandingPageShift.objects.filter(landing_page__organization_id__in=organizations)
 
         fields_data = OrganizationFieldsSerializer(organization_fields, many=True).data
         degrees_data = OrganizationDegreesRetrieveSerializer(organization_degrees, many=True).data
-        shifts_data = LandingPageShiftSerializer(shifts, many=True).data
 
         organizations_data = []
         for org in organizations:
@@ -50,7 +47,6 @@ def organizations_filter(request, pk):
         return Response({
             "organization_fields": fields_data,
             "organization_degrees": degrees_data,
-            "landing_page_shifts": shifts_data,
             "region": organizations_data,
             "languages": languages,
         })
