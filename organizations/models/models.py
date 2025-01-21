@@ -31,6 +31,7 @@ class Organization(models.Model):
     img = models.FileField(upload_to='organizations/', null=True, blank=True)
     organization_type = models.ForeignKey(OrganizationType, on_delete=models.SET_NULL, null=True)
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'organizations'
