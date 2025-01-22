@@ -16,7 +16,10 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'phone',
             'img',
             'organization_type',
-            'region'
+            'region',
+            'desc_json',
+            'grand_text',
+            "grand_json"
         ]
 
 
@@ -39,7 +42,7 @@ class OrganizationGrandSerializer(serializers.ModelSerializer):
         ]
 
 
-class OrganizationDescSerializer(serializers.ModelSerializer):
+class OrganizationDescUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = [
@@ -75,14 +78,13 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
     def get_landing(self, obj):
         obj = OrganizationLandingPage.objects.filter(organization=obj).first()
-        obj2 = LandingPageShift.objects.filter(landing_page=obj).first()
-        if obj and obj2:
+
+        if obj:
             data = {
                 'id': obj.id,
                 'start_date': obj.start_date,
                 'expired_date': obj.expire_date,
                 'education_language': obj.education_language.name,
-                'price': obj2.price if obj2 else None,
 
             }
             return data

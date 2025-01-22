@@ -2,7 +2,7 @@ from rest_framework import generics
 
 from organizations.models import Organization
 from organizations.organization.serializers.get.retrieve_view import OrganizationSerializer, \
-    OrganizationGrandSerializer, OrganizationDescSerializer
+    OrganizationGrandSerializer, OrganizationDescUpdateSerializer
 
 
 class OrganizationUpdateApiView(generics.UpdateAPIView):
@@ -17,4 +17,4 @@ class OrganizationUpdateGrandTextApiView(generics.UpdateAPIView):
 
 class OrganizationUpdateDescTextApiView(generics.UpdateAPIView):
     queryset = Organization.objects.all()
-    serializer_class = OrganizationDescSerializer
+    serializer_class = OrganizationDescUpdateSerializer

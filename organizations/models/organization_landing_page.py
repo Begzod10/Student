@@ -28,6 +28,7 @@ class OrganizationLandingPage(models.Model):
 class OrganizationAdvantage(models.Model):
     name_optional = models.CharField(null=True, blank=True)
     desc = models.TextField()
+    desc_json = models.JSONField(null=True, blank=True)
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     organization = models.ForeignKey("Organization", on_delete=models.CASCADE, null=True)
 

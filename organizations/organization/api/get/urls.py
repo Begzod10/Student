@@ -2,7 +2,8 @@ from django.urls import path
 
 from organizations.organization.api.get.filter_for_type import FilterForTypeOrganizationView
 from organizations.organization.api.get.home import HomeOrganizationView, HomeOrganizationRetrieveDescView, \
-    HomeOrganizationRetrieveAdvantagesView,HomeOrganizationRetrieveGalleryView,HomeOrganizationRetrieveLandingPageDeegreeView,ProfileLandingPageView
+    HomeOrganizationRetrieveAdvantagesView, HomeOrganizationRetrieveGalleryView, \
+    HomeOrganizationRetrieveLandingPageDeegreeView, ProfileLandingPageView
 from organizations.organization.api.get.retrieve_view import RetrieveOrganizationInfos
 from organizations.organization.views.filters import organizations_filter, organizations_get_filtereds
 
