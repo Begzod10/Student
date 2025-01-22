@@ -90,9 +90,9 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
                 'shift': obj.shift.name,
                 'price': obj.price if obj else None,
                 'degree': obj.degree.name,
-                'field': obj.field.name,
+                'field': obj.field.name if obj.field else None,
                 'requirements': obj.requirements,
-                'language': obj.language.name,
+                'language': obj.education_language.name if obj.education_language else None,
                 'grant': obj.grant,
                 'desc': obj.desc,
                 'desc_json': obj.desc_json

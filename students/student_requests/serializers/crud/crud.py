@@ -36,11 +36,9 @@ class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
         user_id = validated_data.get('user')
         landing_id = validated_data.get('landing')
 
-        # Fetching related objects securely
         landing_page = get_object_or_404(OrganizationLandingPage, id=landing_id)
         student = get_object_or_404(Student, user=user_id)
 
-        # Check for existing request
         if StudentRequest.objects.filter(
                 student=student,
                 organization=landing_page.organization,
@@ -48,7 +46,8 @@ class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
                 field=landing_page.field,
                 language=landing_page.education_language,
                 year=landing_page.year,
-                degree=landing_page.degree
+                degree=landing_page.degree,
+                landing_page=landing_page,
         ).exists():
             raise serializers.ValidationError({"detail": "Siz allaqachon bu yo'nalishdan ro'yhatdan o'tgansiz!"})
 
@@ -59,7 +58,8 @@ class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
             field=landing_page.field,
             language=landing_page.education_language,
             year=landing_page.year,
-            degree=landing_page.degree
+            degree=landing_page.degree,
+            landing_page=landing_page,
         )
 
         return {"detail": "Arizangiz topshirildi!"}

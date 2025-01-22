@@ -67,3 +67,23 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
             name_parts.append(obj.student.user.last_name)
 
         return ' '.join(name_parts)
+
+
+class StudentRequestProfileSerializers(serializers.ModelSerializer):
+    degree = serializers.CharField(source='degree.name')
+    language = serializers.CharField(source='language.name')
+    shift = serializers.CharField(source='shift.name')
+    price = serializers.CharField(source='landing_page.price')
+    region = serializers.CharField(source='organization.region.name')
+    location = serializers.CharField(source='organization.locations')
+    name = serializers.CharField(source='organization.name')
+
+    class Meta:
+        model = StudentRequest
+        fields = [
+            'id', 'degree', 'language', 'shift', 'location', 'name',
+            'price', 'region', 'accepted', 'canceled', 'back_recovery',
+            'called_to_exam', 'present_in_exam', 'evaluated',
+            'contract_given', 'payed_status', 'accepted_to_study',
+            'request_status', 'date'
+        ]

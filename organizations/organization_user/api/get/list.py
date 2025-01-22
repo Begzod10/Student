@@ -8,5 +8,9 @@ class OrganizationUserListView(generics.ListAPIView):
     serializer_class = OrganizationUserSerializer
 
     def get_queryset(self):
-        organization_id = self.kwargs['organization_id']
-        return OrganizationUser.objects.filter(organization_id=organization_id)
+        if getattr(self, 'swagger_fake_view', False):
+            return OrganizationUser.objects.none()
+        pk = self.kwargs.get('organization_id')
+        if pk is None:
+            raise KeyError("'pk' not found in URL kwargs.")
+        return OrganizationUser.objects.filter(organization_id=pk)
