@@ -17,8 +17,7 @@ class StudentRequestListView(generics.ListAPIView):
         organization_id = self.request.query_params.get('organization_id', None)
         if organization_id is not None:
             return StudentRequest.objects.filter(organization_id=organization_id)
-        return None
-
+        return StudentRequest.objects.none()
 
 
 class StudentRequestRetrieveView(generics.RetrieveAPIView):

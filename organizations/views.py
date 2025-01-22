@@ -33,7 +33,7 @@ def student_request_dashboard(request):
         new_requests=Count(
             'id',
             filter=Q(
-                accepted=False,
+                accepted=False, 
                 canceled=False,
                 back_recovery=False,
                 called_to_exam=False,
