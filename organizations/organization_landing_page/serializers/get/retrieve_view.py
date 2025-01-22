@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from organizations.models.organization_landing_page import OrganizationLandingPage, LandingPageShift
+from organizations.models.organization_landing_page import OrganizationLandingPage
 from organizations.organization.serializers.get.retrieve_view import OrganizationSerializerForLanding
 
 
@@ -15,13 +15,9 @@ class OrganizationLandingPageSerializer(serializers.ModelSerializer):
             'desc',
             'expire_date',
             'degree_id',
+            'grant',
             'education_language'
         ]
         depth = 1
 
 
-class LandingPageShiftSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LandingPageShift
-        fields = '__all__'
-        depth = 1

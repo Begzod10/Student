@@ -2,8 +2,7 @@ from rest_framework import serializers
 
 from organizations.models.models import Organization
 from organizations.models.models import OrganizationGallery
-from organizations.models.organization_landing_page import LandingPageShift, \
-    OrganizationAdvantage, OrganizationLandingPage
+from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -17,7 +16,10 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'phone',
             'img',
             'organization_type',
-            'region'
+            'region',
+            'desc_json',
+            'grand_text',
+            "grand_json"
         ]
 
 
@@ -27,6 +29,26 @@ class OrganizationSerializerForLanding(serializers.ModelSerializer):
         fields = [
             'id',
             'name'
+        ]
+
+
+class OrganizationGrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = [
+            'id',
+            'grand_text',
+            'grand_json'
+        ]
+
+
+class OrganizationDescUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = [
+            'id',
+            'desc',
+            'desc_json'
         ]
 
 
@@ -58,14 +80,22 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
     def get_landing(self, obj):
         obj = OrganizationLandingPage.objects.filter(organization=obj).first()
+
         if obj:
             data = {
                 'id': obj.id,
                 'start_date': obj.start_date,
                 'expired_date': obj.expire_date,
                 'education_language': obj.education_language.name,
+                'shift': obj.shift.name,
                 'price': obj.price if obj else None,
-
+                'degree': obj.degree.name,
+                'field': obj.field.name,
+                'requirements': obj.requirements,
+                'language': obj.language.name,
+                'grant': obj.grant,
+                'desc': obj.desc,
+                'desc_json': obj.desc_json
             }
             return data
 
@@ -123,7 +153,6 @@ class OrganizationAdvantagesSerializer(serializers.ModelSerializer):
 
 
 class OrganizationGallerySerializer(serializers.ModelSerializer):
-
     file = serializers.CharField(source='file.url', read_only=True)
 
     class Meta:

@@ -5,5 +5,6 @@ from organizations.organization_gallery.serializers.get.retrieve_view import Org
 
 
 class OrganizationGalleryRetrieve(generics.RetrieveAPIView):
+    filter_mapping = {'organization': 'id'}
     queryset = OrganizationGallery.objects.all()
     serializer_class = OrganizationGallerySerializer
