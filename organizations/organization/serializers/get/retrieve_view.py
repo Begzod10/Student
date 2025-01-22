@@ -34,6 +34,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
     region = serializers.CharField(source='region.name', read_only=True)
     desc = serializers.SerializerMethodField()
     organization_type = serializers.CharField(source='organization_type.name', read_only=True)
+    organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
     advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
     degree = serializers.SerializerMethodField()
@@ -48,6 +49,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             'phone',
             'img',
             'organization_type',
+            'organization_type_id',
             'region',
             'advantages',
             'landing',
@@ -56,14 +58,13 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
     def get_landing(self, obj):
         obj = OrganizationLandingPage.objects.filter(organization=obj).first()
-        obj2 = LandingPageShift.objects.filter(landing_page=obj).first()
-        if obj and obj2:
+        if obj:
             data = {
                 'id': obj.id,
                 'start_date': obj.start_date,
                 'expired_date': obj.expire_date,
                 'education_language': obj.education_language.name,
-                'price': obj2.price if obj2 else None,
+                'price': obj.price if obj else None,
 
             }
             return data

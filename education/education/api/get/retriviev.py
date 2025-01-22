@@ -1,6 +1,7 @@
 from rest_framework import generics
-from education.models import EducationLanguage
+
 from education.education.serializers.get.retriviev import EducationSerializer
+from education.models import EducationLanguage
 
 
 class EducationRetrieve(generics.RetrieveAPIView):
