@@ -1,8 +1,6 @@
 from django.db import models
 
-from students.models.academic_year import AcademicYear
 from students.models.region import Region
-from students.models.student import Shift
 
 
 class OrganizationType(models.Model):
@@ -26,12 +24,15 @@ class OrganizationDegrees(models.Model):
 class Organization(models.Model):
     name = models.CharField(max_length=250, null=True)
     locations = models.CharField(max_length=250, null=True)
-    desc = models.CharField(max_length=250, null=True)
+    desc = models.TextField(null=True)
+    desc_json = models.JSONField(null=True, blank=True)
     phone = models.CharField(max_length=250, null=True)
     img = models.FileField(upload_to='organizations/', null=True, blank=True)
     organization_type = models.ForeignKey(OrganizationType, on_delete=models.SET_NULL, null=True)
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
     deleted = models.BooleanField(default=False)
+    grand_text = models.TextField(null=True, blank=True)
+    grand_json = models.JSONField(null=True, blank=True)
 
     class Meta:
         app_label = 'organizations'

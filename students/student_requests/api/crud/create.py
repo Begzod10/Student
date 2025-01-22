@@ -2,8 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
 from students.models.student import StudentRequest
-
-from students.student_requests.serializers.crud.crud import StudentRequestCreateUpdateSerializer
+from students.student_requests.serializers.crud.crud import StudentRequestCreateUpdateSerializer2
 
 
 class StudentRequestCreateView(generics.CreateAPIView):
@@ -11,4 +10,4 @@ class StudentRequestCreateView(generics.CreateAPIView):
     queryset = StudentRequest.objects.all().select_related(
         'student__user', 'degree', 'shift', 'language', 'organization__organization_type', 'organization__region'
     )
-    serializer_class = StudentRequestCreateUpdateSerializer
+    serializer_class = StudentRequestCreateUpdateSerializer2

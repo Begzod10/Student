@@ -11,13 +11,13 @@ from education.education.serializers.get.retriviev import EducationSerializer, E
 
 class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
     organization = serializers.PrimaryKeyRelatedField(
-        queryset=Organization.objects.all(), source="organization_id"
+        queryset=Organization.objects.all()
     )
     education_language = serializers.PrimaryKeyRelatedField(
         queryset=EducationLanguage.objects.all()
     )
     degree = serializers.PrimaryKeyRelatedField(
-        queryset=OrganizationDegrees.objects.all(), source="degree_id"
+        queryset=OrganizationDegrees.objects.all()
     )
     year = serializers.JSONField(write_only=True)
 
@@ -29,7 +29,6 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
             'education_language',
             'year',
             'desc',
-            'name_optional',
             'expire_date',
             'degree',
             'grant',
@@ -43,9 +42,9 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
         academic_year, _ = AcademicYear.objects.get_or_create(
             from_date=from_date, to=to_date
         )
-        validated_data['year_id'] = academic_year
-        validated_data['organization_id'] = validated_data.pop('organization_id')
-        validated_data['degree_id'] = validated_data.pop('degree_id')
+        validated_data['year'] = academic_year
+        validated_data['organization'] = validated_data.pop('organization')
+        validated_data['degree'] = validated_data.pop('degree')
         return OrganizationLandingPage.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
@@ -61,3 +60,9 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+    def delete(self, *args, **kwargs):
+        """Override the delete method to mark the instance as deleted."""
+        self.deleted = True
+        self.save()
+        return True
