@@ -9,5 +9,4 @@ class OrganizationUserListView(generics.ListAPIView):
 
     def get_queryset(self):
         organization_id = self.kwargs['organization_id']
-        print(OrganizationUser.objects.filter(organization_id=organization_id))
         return OrganizationUser.objects.filter(organization_id=organization_id)

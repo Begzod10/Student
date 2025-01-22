@@ -20,6 +20,7 @@ class OrganizationLandingPage(models.Model):
     requirements = models.TextField(null=True, blank=True)
     shift = models.ForeignKey(Shift, on_delete=models.SET_NULL, null=True, blank=True)
     field = models.ForeignKey("organizations.OrganizationFields", on_delete=models.SET_NULL, null=True, blank=True)
+    desc_json = models.JSONField(null=True, blank=True)
 
     class Meta:
         app_label = 'organizations'

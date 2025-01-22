@@ -56,6 +56,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
     region = serializers.CharField(source='region.name', read_only=True)
     desc = serializers.SerializerMethodField()
     organization_type = serializers.CharField(source='organization_type.name', read_only=True)
+    organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
     advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
     degree = serializers.SerializerMethodField()
@@ -70,6 +71,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             'phone',
             'img',
             'organization_type',
+            'organization_type_id',
             'region',
             'advantages',
             'landing',
@@ -85,7 +87,15 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
                 'start_date': obj.start_date,
                 'expired_date': obj.expire_date,
                 'education_language': obj.education_language.name,
-
+                'shift': obj.shift.name,
+                'price': obj.price if obj else None,
+                'degree': obj.degree.name,
+                'field': obj.field.name,
+                'requirements': obj.requirements,
+                'language': obj.language.name,
+                'grant': obj.grant,
+                'desc': obj.desc,
+                'desc_json': obj.desc_json
             }
             return data
 

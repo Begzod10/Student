@@ -26,6 +26,8 @@ class HomeOrganizationRetrieveAdvantagesView(generics.RetrieveAPIView):
     serializer_class = OrganizationAdvantagesSerializer
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return OrganizationAdvantage.objects.none()
         pk = self.kwargs.get('pk')
         if pk is None:
             raise KeyError("'pk' not found in URL kwargs.")
@@ -43,6 +45,8 @@ class HomeOrganizationRetrieveGalleryView(generics.ListAPIView):
     serializer_class = OrganizationGallerySerializer
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return OrganizationGallery.objects.none()
         pk = self.kwargs.get('pk')
         if pk is None:
             raise KeyError("'pk' not found in URL kwargs.")
@@ -59,6 +63,8 @@ class HomeOrganizationRetrieveLandingPageDeegreeView(generics.ListAPIView):
     serializer_class = OrganizationOrganizationLandingPageSerializer
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Organization.objects.none()
         pk = self.kwargs.get('pk')
         if pk is None:
             raise KeyError("'pk' not found in URL kwargs.")
