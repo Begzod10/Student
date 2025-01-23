@@ -10,6 +10,7 @@ from students.student_requests.filters import StudentRequestFilter
 
 
 class StudentRequestListView(generics.ListAPIView):
+    # Uncomment and use permissions as needed
     # permission_classes = [IsAuthenticated]
 
     queryset = StudentRequest.objects.all()

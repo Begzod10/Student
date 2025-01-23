@@ -10,7 +10,6 @@ class FileCreateUpdateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def update(self, instance, validated_data):
-        print(instance, validated_data)
         new_file = validated_data.pop('url', None)
         if new_file:
             instance.url.save(new_file.name, new_file)

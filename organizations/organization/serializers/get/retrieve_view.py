@@ -3,6 +3,7 @@ from rest_framework import serializers
 from organizations.models.models import Organization
 from organizations.models.models import OrganizationGallery
 from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
+from students.academic_year.functions.register_academic_year import register_academic_year
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -79,8 +80,8 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
         ]
 
     def get_landing(self, obj):
+        register_academic_year()
         obj = OrganizationLandingPage.objects.filter(organization=obj).first()
-
         if obj:
             data = {
                 'id': obj.id,
@@ -100,6 +101,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             return data
 
     def get_degree(self, obj):
+        register_academic_year()
         obj = OrganizationLandingPage.objects.filter(organization=obj).distinct()
         data_dict = {}
 
@@ -115,10 +117,12 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
         return data
 
     def get_desc(self, obj):
+        register_academic_year()
         if obj.desc:
             return f"{obj.desc[:500]}..."
 
     def get_advantages(self, obj):
+        register_academic_year()
         text = OrganizationAdvantage.objects.filter(organization=obj).first()
         if text:
             if text.desc:

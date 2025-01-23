@@ -1,6 +1,7 @@
 import pprint
 
 from rest_framework import serializers
+from rest_framework.response import Response
 
 from education.education.serializers.get.retriviev import EducationLanguage
 from organizations.models.models import OrganizationDegrees
@@ -50,6 +51,7 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
 
     def get_message(self, obj):
         return "E'lon muvaffaqiyatlik yaratildi!"
+
     def update(self, instance, validated_data):
         pprint.pprint(validated_data)
 
@@ -71,11 +73,11 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
 
         return {"msg": "Yo'nalish muvaffaqiyatli o'zgartirildi"}
 
-    def delete(self, *args, **kwargs):
-        """Override the delete method to mark the instance as deleted."""
-        self.deleted = True
-        self.save()
-        return {"msg": "Yo'nalish muvaffaqiyatli o'chirildi"}
+    # def delete(self, *args, **kwargs):
+    #     """Override the delete method to mark the instance as deleted."""
+    #     self.deleted = True
+    #     self.save()
+    #     return Response({"message": "Yo'nalish muvaffaqiyatli o'chirildi"}, status=200)
 
 
 class OrganizationLandingPageUpdateSerializer(serializers.ModelSerializer):
