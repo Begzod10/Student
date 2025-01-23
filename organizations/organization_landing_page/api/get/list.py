@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 
 class OrganizationLandingPageList(generics.ListAPIView):
-    queryset = OrganizationLandingPage.objects.all()
+    queryset = OrganizationLandingPage.objects.filter(deleted=False).order_by('id').all()
     serializer_class = OrganizationLandingPageSerializer
 
     def get_queryset(self):

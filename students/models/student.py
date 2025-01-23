@@ -34,7 +34,7 @@ class StudentRequest(models.Model):
                                  blank=True)
     year = models.ForeignKey('students.AcademicYear', on_delete=models.SET_NULL, null=True, blank=True)
     degree = models.ForeignKey('organizations.OrganizationDegrees', on_delete=models.SET_NULL, null=True, blank=True)
-    landing_page = models.ForeignKey('organizations.OrganizationLandingPage', null=True ,on_delete=models.SET_NULL)
+    # landing_page = models.ForeignKey('organizations.OrganizationLandingPage', null=True, on_delete=models.SET_NULL)
     accepted = models.BooleanField(default=False)
     canceled = models.BooleanField(default=False)
     back_recovery = models.BooleanField(default=False)
