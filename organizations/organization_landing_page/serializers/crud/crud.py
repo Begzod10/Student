@@ -24,8 +24,11 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
     degree = serializers.PrimaryKeyRelatedField(
         queryset=OrganizationDegrees.objects.all()
     )
-    year = serializers.JSONField(write_only=True)
-    message=serializers.SerializerMethodField()
+    year = serializers.PrimaryKeyRelatedField(
+        queryset=AcademicYear.objects.all()
+    )
+
+    message = serializers.SerializerMethodField()
 
     class Meta:
         model = OrganizationLandingPage
@@ -49,6 +52,7 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        pprint.pprint(validated_data)
         year_id = validated_data.pop('year')
         academic_year = AcademicYear.objects.get(id=year_id)
         validated_data['year'] = academic_year
@@ -71,17 +75,25 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
         return getattr(self, 'custom_message', '')
 
     def update(self, instance, validated_data):
-        year_data = validated_data.pop('year', None)
-        if year_data:
-            from_date = year_data.get('from_date')
-            to_date = year_data.get('to')
-            academic_year, _ = AcademicYear.objects.get_or_create(
-                from_date=from_date, to=to_date
-            )
-            instance.year_id = academic_year
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+        pprint.pprint(validated_data)
+
+
+        instance.year = validated_data.pop('year', None)
+        instance.organization = validated_data.pop('organization', None)
+        instance.degree = validated_data.pop('degree')
+        instance.education_language = validated_data.pop('education_language')
+        instance.desc = validated_data.pop('desc', '')
+        instance.desc_json = validated_data.pop('desc_json', '')
+        instance.shift = validated_data.pop('shift', None)
+        instance.requirements = validated_data.pop('requirements', '')
+        instance.price = validated_data.pop('price', None)
+        instance.grant = validated_data.pop('grant', False)
+        instance.expire_date = validated_data.pop('expire_date', None)
+        instance.requirements_json = validated_data.pop('requirements_json', '')
+        instance.start_date = validated_data.pop('start_date', None)
+
         instance.save()
+
         return {"msg": "Yo'nalish muvaffaqiyatli o'zgartirildi"}
 
     def delete(self, *args, **kwargs):
@@ -89,3 +101,40 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
         self.deleted = True
         self.save()
         return {"msg": "Yo'nalish muvaffaqiyatli o'chirildi"}
+
+
+class OrganizationLandingPageUpdateSerializer(serializers.ModelSerializer):
+    organization = serializers.PrimaryKeyRelatedField(
+        queryset=Organization.objects.all()
+    )
+    education_language = serializers.PrimaryKeyRelatedField(
+        queryset=EducationLanguage.objects.all()
+    )
+    degree = serializers.PrimaryKeyRelatedField(
+        queryset=OrganizationDegrees.objects.all()
+    )
+    year = serializers.PrimaryKeyRelatedField(
+        queryset=AcademicYear.objects.all()
+    )
+
+    message = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrganizationLandingPage
+        fields = ['id', 'organization', 'education_language', 'year', 'desc', 'expire_date', 'degree', 'grant',
+                  'price', 'requirements', 'shift', 'desc_json', 'requirements_json', 'field', 'start_date', 'message']
+
+    def get_message(self, obj):
+        return getattr(self, 'custom_message', "Yo'nalish muvaffaqiyatli o'zgartirildi")
+
+    def update(self, instance, validated_data):
+        print(validated_data)
+
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)  # Dynamically update all other fields
+
+        instance.save()
+        print(instance)# Save the updated instance
+        return instance
+
