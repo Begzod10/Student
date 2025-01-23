@@ -77,8 +77,8 @@ class StudentRequestSerializerList(serializers.ModelSerializer):
             'date',
         ]
 
-    def get_name(self, object):
-        return f"{object.student.user.name} {object.student.user.surname}"
+    def get_name(self, obj):
+        return f"{obj.student.user.name} {obj.student.user.surname}"
 
     def get_date(self, obj):
         return obj.date.strftime('%Y-%m-%d') if obj.date else None
