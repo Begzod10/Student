@@ -15,4 +15,5 @@ urlpatterns = [
     path('organization_gallery/get/', include('organizations.organization_gallery.api.get.urls')),
     path('organization_user/crud/', include('organizations.organization_user.api.crud.urls')),
     path('organization_user/get/', include('organizations.organization_user.api.get.urls')),
+    path('organization_fields/', include('organizations.organization_fields.urls')),
 ]

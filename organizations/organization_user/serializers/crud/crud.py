@@ -1,8 +1,5 @@
 from rest_framework import serializers
 from organizations.models import OrganizationUser, Jobs, OrganizationType, Organization
-
-from rest_framework import serializers
-from organizations.models import OrganizationUser, Jobs, OrganizationType, Organization
 from users.models import Users
 from django.core.exceptions import ValidationError
 
@@ -14,11 +11,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'name', 'surname', 'username', 'phone']
+        fields = ['id', 'name', 'surname', 'username', 'phone', 'file']
 
     def create(self, validated_data):
         user = Users.objects.create(**validated_data)
         user.set_password("12345678")
+        user.role = "Organization"
         user.save()
         return user
 
@@ -28,15 +26,19 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrganizationUser
-        fields = ['id', 'job', 'user', 'organization']
+        fields = ['id', 'user', 'organization']
 
     def create(self, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data:
+            file_id = user_data['file'].id
+            user_data['file'] = file_id
             user_serializer = UserCreateSerializer(data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user = user_serializer.save()
             validated_data['user'] = user
+        job = Jobs.objects.get(name='Organization')
+        validated_data['job'] = job
         return OrganizationUser.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
@@ -51,10 +53,14 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
                 if user_data.get('username') != instance.user.username:
                     if Users.objects.filter(username=user_data.get('username')).exclude(id=instance.user.id).exists():
                         raise ValidationError({"username": "Users with this username already exists."})
+            file_id = user_data['file'].id
+            user_data['file'] = file_id
+            print(user_data)
 
             user_serializer = UserCreateSerializer(instance=instance.user, data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
+            print(instance.user)
             validated_data['user'] = instance.user
 
         for attr, value in validated_data.items():
@@ -64,6 +70,8 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
 
     def delete(self, instance):
         user = instance.user
+        get_user = Users.objects.get(id=user.id)
+        get_user.delete()
         instance.delete()
         user.delete()
         return {

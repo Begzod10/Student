@@ -33,7 +33,7 @@ class StudentRequest(models.Model):
     field = models.ForeignKey('organizations.OrganizationFields', on_delete=models.SET_NULL, null=True, blank=True)
     language = models.ForeignKey('education.EducationLanguage', on_delete=models.SET_NULL, null=True,
                                  blank=True)
-    request_status = models.BigIntegerField()
+    request_status = models.BigIntegerField(null=True)
     year = models.ForeignKey('students.AcademicYear', on_delete=models.SET_NULL, null=True, blank=True)
     accepted = models.BooleanField(default=False)
     canceled = models.BooleanField(default=False)

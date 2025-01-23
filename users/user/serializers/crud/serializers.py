@@ -3,7 +3,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from students.models import Student
 from users.models import Users
+from organizations.models import OrganizationUser
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -16,9 +18,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password')
+        role = validated_data.get('role')
+        if role is None:
+            role = 'user'
         user = Users.objects.create(**validated_data)
         user.set_password(password)
         user.save()
+        if role == 'user':
+            Student.objects.create(user=user)
         return user
 
 
@@ -28,6 +35,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['phone'] = user.phone
+
         return token
 
     def validate(self, attrs):
