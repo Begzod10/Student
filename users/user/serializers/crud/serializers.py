@@ -5,6 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from students.models import Student
 from users.models import Users
+from organizations.models import OrganizationUser
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -34,6 +35,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['phone'] = user.phone
+
         return token
 
     def validate(self, attrs):
