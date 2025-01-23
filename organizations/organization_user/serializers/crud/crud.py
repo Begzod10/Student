@@ -19,6 +19,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = Users.objects.create(**validated_data)
         user.set_password("12345678")
+        user.role = "Organization"
         user.save()
         return user
 
@@ -64,6 +65,8 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
 
     def delete(self, instance):
         user = instance.user
+        get_user = Users.objects.get(id=user.id)
+        get_user.delete()
         instance.delete()
         user.delete()
         return {
