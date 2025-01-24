@@ -5,5 +5,5 @@ from organizations.organization_gallery.api.get.retrieve import OrganizationGall
 
 urlpatterns = [
     path('<int:pk>/', OrganizationGalleryRetrieve.as_view(), name='organization-gallery'),
-    path('', OrganizationGalleryList.as_view(), name='organization-gallery-list'),
+    path('', OrganizationGalleryList.as_view(), name='organization-gallery-list')
 ]
