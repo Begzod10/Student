@@ -11,7 +11,7 @@ from organizations.organization.serializers.get.retrieve_view import Organizatio
 
 
 class HomeOrganizationView(generics.ListAPIView):
-    queryset = Organization.objects.filter(deleted=False).all()
+    queryset = Organization.objects.filter(deleted=False).distinct()
     serializer_class = OrganizationHomeSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = OrganizationLandingPageFilter

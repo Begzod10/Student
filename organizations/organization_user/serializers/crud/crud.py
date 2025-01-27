@@ -31,7 +31,7 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data:
-            file_id = user_data['file'].id if user_data['file'] else None
+            file_id = user_data['file'].id if 'file' in user_data else None
             user_data['file'] = file_id
             user_serializer = UserCreateSerializer(data=user_data)
             user_serializer.is_valid(raise_exception=True)

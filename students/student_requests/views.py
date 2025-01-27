@@ -1,11 +1,12 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics
+from rest_framework.decorators import api_view
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
+
 from students.models.student import StudentRequest
 from students.serializers.student import StudentRequestSerializerList, StudentRequestSerializerRetrieve
-from rest_framework.decorators import api_view
-from django.db.models import Count, Q
 from students.student_requests.filters import StudentRequestFilter
 
 
@@ -15,6 +16,8 @@ class StudentRequestListView(generics.ListAPIView):
 
     queryset = StudentRequest.objects.all()
     serializer_class = StudentRequestSerializerList
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = StudentRequestFilter
 
     def get_queryset(self):
         organization_id = self.request.query_params.get('organization_id', None)

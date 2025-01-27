@@ -3,10 +3,15 @@ from rest_framework import serializers
 from organizations.models.models import Organization
 from organizations.models.models import OrganizationGallery
 from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
+from organizations.organization_type.serializers.get.list import OrganizationTypeSerializerList
 from students.academic_year.functions.register_academic_year import register_academic_year
+from students.region.serializers.get.retrieve_view import RegionSerializer
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
+    region = RegionSerializer()
+    organization_type = OrganizationTypeSerializerList()
+
     class Meta:
         model = Organization
         fields = [
@@ -157,7 +162,7 @@ class OrganizationAdvantagesSerializer(serializers.ModelSerializer):
 
 
 class OrganizationGallerySerializer(serializers.ModelSerializer):
-    file = serializers.CharField(source='file.url', read_only=True)
+    file = serializers.CharField(source='file.url.url', read_only=True)
 
     class Meta:
         model = OrganizationGallery

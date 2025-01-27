@@ -23,7 +23,7 @@ class OrganizationDegrees(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=250, null=True)
-    locations = models.CharField(max_length=250, null=True)
+    locations = models.JSONField(max_length=250, null=True)
     desc = models.TextField(null=True)
     desc_json = models.JSONField(null=True, blank=True)
     phone = models.CharField(max_length=250, null=True)

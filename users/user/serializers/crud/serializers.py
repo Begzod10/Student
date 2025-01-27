@@ -43,9 +43,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         password = attrs.get('password')
 
         user = authenticate(phone=phone, password=password)
-
         if not user:
-            raise AuthenticationFailed({'detail': "Telefon raqam yoki parol noto‘g‘ri", 'status': False})
+            print(phone, password)
+            user = authenticate(username=phone, password=password)
+            if not user:
+                raise AuthenticationFailed({'detail': "Telefon raqam yoki parol noto‘g‘ri", 'status': False})
 
         if not user.is_active:
             raise AuthenticationFailed('Foydalanuvchi faol emas')
