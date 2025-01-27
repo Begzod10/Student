@@ -11,7 +11,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'name', 'surname', 'username', 'phone', 'file']
+        fields = ['id', 'name', 'surname', 'username', 'phone_extra', 'file']
 
     def create(self, validated_data):
         user = Users.objects.create(**validated_data)
@@ -70,6 +70,7 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
     def delete(self, instance):
         user = instance.user
         get_user = Users.objects.get(id=user.id)
+        print(get_user)
         get_user.delete()
         instance.delete()
         user.delete()

@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'name', 'surname', 'username', 'phone', 'file']
+        fields = ['id', 'name', 'surname', 'username', 'phone_extra', 'file']
 
 
 class OrganizationUserSerializer(serializers.ModelSerializer):
