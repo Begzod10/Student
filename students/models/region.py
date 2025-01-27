@@ -44,11 +44,10 @@ class Region(models.Model):
         app_label = 'students'
 
 
-# @receiver(post_migrate)
-# def create_regions(sender, **kwargs):
-#     for province in provinces_data:
-#         Region.objects.get_or_create(
-#             name_uz=province['name_uz'],
-#             name_ru=province['name_ru'],
-#             name_en=province['name_en']
-#         )
+@receiver(post_migrate)
+def create_regions(sender, **kwargs):
+    for province in provinces_data:
+        Region.objects.get_or_create(
+            name=province['name_uz'],
+
+        )
