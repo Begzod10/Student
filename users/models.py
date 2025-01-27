@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 class Users(AbstractUser):
@@ -43,3 +46,20 @@ class Users(AbstractUser):
 
     class Meta:
         app_label = 'users'
+
+
+@receiver(pre_save, sender=Users)
+def sync_phone_username(sender, instance, **kwargs):
+    if not instance.phone and not instance.username:
+        raise ValidationError("Either phone or username must be provided.")
+
+    if not instance.username and instance.phone:
+        instance.username = instance.phone
+
+    elif not instance.phone and instance.username:
+        instance.phone = instance.username
+
+    if Users.objects.filter(phone=instance.phone).exclude(id=instance.id).exists():
+        raise ValidationError("This phone number is already in use. Please use a different phone number.")
+    if Users.objects.filter(username=instance.username).exclude(id=instance.id).exists():
+        raise ValidationError("This username is already taken. Please choose another one.")
