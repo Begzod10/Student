@@ -8,7 +8,7 @@ from users.user.api.crud.login import CustomTokenObtainPairView
 from django.conf import settings
 
 urlpatterns = [
-    # path('api/admin/', admin.site.urls),
+    path('api/admin/', admin.site.urls),
     path('api/', include('config.utils.swagger')),
     path('api/students/', include('students.urls')),
     path('api/users/', include('users.user.urls')),
