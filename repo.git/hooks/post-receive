@@ -1,0 +1,28 @@
+#!/bin/bash
+WORK_DIR=/var/www/ntt/data/www/ntt.avotra.ru/ntt
+GIT_DIR=/var/www/ntt/data/www/ntt.avotra.ru/ntt/repo.git
+SERVICE_NAME=ntt
+BRANCH="server"
+
+echo "Hook triggered, checking branch..." >> /tmp/post-receive.log
+echo "Detected branch refname: $refname" >> /tmp/post-receive.log
+
+read oldrev newrev refname
+echo "Refname: $refname" >> /tmp/post-receive.log
+
+if [[ $refname = "refs/heads/$BRANCH" ]]; then
+  echo "Correct branch detected, updating code..." >> /tmp/post-receive.log
+  cd $WORK_DIR
+  unset GIT_DIR
+  git pull origin $BRANCH
+  echo "Git pull completed." >> /tmp/post-receive.log
+  # Xizmatni qayta ishga tushirish
+  sudo systemctl restart $SERVICE_NAME
+  echo "Service restarted." >> /tmp/post-receive.log
+  # Migratsiyani bajarish, misol uchun Django
+  ./manage.py migrate
+  echo "Migration completed." >> /tmp/post-receive.log
+else
+  echo "Push to other branch, skipping..." >> /tmp/post-receive.log
+fi
+
