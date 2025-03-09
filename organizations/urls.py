@@ -1,5 +1,3 @@
-from django.urls import path
-from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
@@ -16,4 +14,5 @@ urlpatterns = [
     path('organization_user/crud/', include('organizations.organization_user.api.crud.urls')),
     path('organization_user/get/', include('organizations.organization_user.api.get.urls')),
     path('organization_fields/', include('organizations.organization_fields.urls')),
+    path('', include('organizations.news.urls')),
 ]

@@ -33,6 +33,7 @@ class Organization(models.Model):
     deleted = models.BooleanField(default=False)
     grand_text = models.TextField(null=True, blank=True)
     grand_json = models.JSONField(null=True, blank=True)
+    inn = models.CharField(max_length=250, null=True)
 
     class Meta:
         app_label = 'organizations'

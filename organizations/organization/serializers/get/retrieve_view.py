@@ -11,6 +11,7 @@ from students.region.serializers.get.retrieve_view import RegionSerializer
 class OrganizationSerializer(serializers.ModelSerializer):
     region = RegionSerializer()
     organization_type = OrganizationTypeSerializerList()
+    request_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
@@ -25,8 +26,15 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'region',
             'desc_json',
             'grand_text',
-            "grand_json"
+            "grand_json",
+            'inn',
+            'request_count'
         ]
+
+    def get_request_count(self, obj):
+        from students.models.student import StudentRequest
+        count = StudentRequest.objects.filter(organization=obj).count()
+        return count
 
 
 class OrganizationSerializerForLanding(serializers.ModelSerializer):

@@ -1,13 +1,10 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics
 from rest_framework.filters import SearchFilter
 
 from students.models.student import StudentRequest
-
-from students.student_requests.serializers.get.get import StudentRequestListSerializer
-
 from students.student_requests.filters import StudentRequestFilter
+from students.student_requests.serializers.get.get import StudentRequestListSerializer
 
 
 class StudentRequestListView(generics.ListAPIView):

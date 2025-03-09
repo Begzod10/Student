@@ -1,6 +1,7 @@
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+from corsheaders.defaults import default_headers
 
 SECRET_KEY = 'django-insecure-x8p_w1cymrqrta$7y!il0$k(-y0hi=log22cu7m#y5g1drwhid'
 from datetime import timedelta
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'config.middlware.SetLanguageFromQueryParamMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
 
 ]
 
@@ -134,4 +136,24 @@ LANGUAGES = (
     ('uz', _('Uzbek')),
     ('ru', _('Russian')),
 )
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+SESSION_COOKIE_AGE = 1209600
+SESSION_SAVE_EVERY_REQUEST = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-Visitor-ID',  # Frontend yuboradigan header
+]
 
+# Agar kerak bo'lsa, usullarga ruxsat
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]

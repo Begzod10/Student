@@ -15,5 +15,6 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
             'phone',
             'img',
             'organization_type',
-            'region'
+            'region',
+            'inn'
         ]
