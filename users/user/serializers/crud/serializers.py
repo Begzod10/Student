@@ -1,11 +1,10 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 from students.models import Student
 from users.models import Users
-from organizations.models import OrganizationUser
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -53,3 +52,34 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise AuthenticationFailed('Foydalanuvchi faol emas')
 
         return super().validate(attrs)
+
+
+from rest_framework_simplejwt.tokens import AccessToken
+
+
+class CustomTokenRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        access_token = data.get("access")
+        refresh_token = attrs.get("refresh")
+        decoded_token = AccessToken(access_token)
+
+        user_id = decoded_token.get("user_id")
+
+        try:
+            user = Users.objects.get(id=user_id)
+            data.update({
+                "refresh": refresh_token,
+                "access": access_token,
+                "id": user.id,
+                "name": user.name,
+                "surname": user.surname,
+                "sex": user.sex,
+                "born_date": user.born_date,
+                "email": user.email,
+            })
+        except Users.DoesNotExist:
+            data.update({"error": "User not found"})
+
+        return data
