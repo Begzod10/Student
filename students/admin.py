@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AcademicYear, Region, Shift, Student, StudentRequest
+from .models import AcademicYear, Region, Shift, Student, StudentRequest, Notification
 
 
 @admin.register(AcademicYear)
@@ -23,7 +23,7 @@ class ShiftAdmin(admin.ModelAdmin):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = (
-    'user', 'certificate', 'region', 'education_name', 'education_type', 'education_address', 'education_region')
+        'user', 'certificate', 'region', 'education_name', 'education_type', 'education_address', 'education_region')
     search_fields = ('education_name', 'education_type', 'education_address')
     list_filter = ('region',)
 
@@ -31,7 +31,14 @@ class StudentAdmin(admin.ModelAdmin):
 @admin.register(StudentRequest)
 class StudentRequestAdmin(admin.ModelAdmin):
     list_display = (
-    'student', 'organization', 'shift', 'field', 'language', 'year', 'degree', 'landing_page', 'accepted')
+        'student', 'organization', 'shift', 'field', 'language', 'year', 'degree', 'landing_page', 'accepted')
     list_filter = ('organization', 'shift', 'language', 'year', 'degree', 'accepted', 'date')
     search_fields = ('student__user__username', 'organization__name')
     date_hierarchy = 'date'
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('student', 'organization', 'description', 'created_at')
+    search_fields = ('student__user__username', 'organization__name')
+    date_hierarchy = 'created_at'
