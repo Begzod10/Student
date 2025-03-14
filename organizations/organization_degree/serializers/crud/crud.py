@@ -10,7 +10,7 @@ class OrganizationDegreesCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationDegrees
 
-        fields = ['id', 'name', 'organization_type']
+        fields = ['id', 'name', 'organization_type', 'desc']
 
     # def create(self, validated_data):
     #     organization_type = validated_data.pop('organization_type')

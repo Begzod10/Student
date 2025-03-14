@@ -9,4 +9,4 @@ class OrganizationDegreesRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrganizationDegrees
-        fields = ['id', 'name', 'organization_type']
+        fields = ['id', 'name', 'organization_type', 'desc']

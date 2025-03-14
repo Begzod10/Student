@@ -16,6 +16,7 @@ class OrganizationDegrees(models.Model):
     name = models.CharField(max_length=250, null=True)
     organization_type = models.ForeignKey(OrganizationType, on_delete=models.SET_NULL, null=True)
     deleted = models.BooleanField(default=False)
+    desc = models.TextField(null=True, blank=True)
 
     class Meta:
         app_label = 'organizations'
