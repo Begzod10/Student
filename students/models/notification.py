@@ -7,6 +7,7 @@ class Notification(models.Model):
     organization = models.ForeignKey('organizations.Organization', on_delete=models.CASCADE)
     desc_json = models.JSONField(null=True, blank=True)
     student = models.ForeignKey('students.student', on_delete=models.SET_NULL, null=True, blank=True)
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.description
