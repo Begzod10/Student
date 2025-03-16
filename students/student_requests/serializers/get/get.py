@@ -38,7 +38,18 @@ class StudentRequestProfileSerializer(serializers.Serializer):
                 'region': obj.organization.region.name
             },
             'language': obj.language.name,
-            'date': obj.date
+            'date': obj.date,
+            'request_status': {
+                "cancel": obj.canceled,
+                "accept": obj.accepted,
+                "back_recovery": obj.back_recovery,
+                'present_in_exam': obj.present_in_exam,
+                'evaluated': obj.evaluated,
+                'contract_given': obj.contract_given,
+                'accepted_to_study': obj.accepted_to_study,
+                'request_status': obj.request_status
+            }
+
         }
 
 
@@ -49,12 +60,16 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
     shift = serializers.CharField(source='shift.name')
     language = serializers.CharField(source='language.name')
     field = serializers.CharField(source='field.name')
+    image = serializers.SerializerMethodField()
+    region = serializers.SerializerMethodField()
+    price = serializers.CharField(source='landing_page.price')
 
     # direction ta'lim yo'nalishi xali qoshilmadi
 
     class Meta:
         model = StudentRequest
-        fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date', 'accepted', 'field']
+        fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date', 'accepted', 'field', 'image', 'region',
+                  'price']
 
     def get_name(self, obj):
         name_parts = []
@@ -67,6 +82,12 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
             name_parts.append(obj.student.user.last_name)
 
         return ' '.join(name_parts)
+
+    def get_image(self, obj):
+        return obj.student.user.image if obj.student.user.image else None
+
+    def get_region(self, obj):
+        return obj.organization.region.name if obj.organization.region else None
 
 
 class StudentRequestProfileSerializers(serializers.ModelSerializer):

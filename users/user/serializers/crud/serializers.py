@@ -3,11 +3,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
-from students.models import Student
+from students.models import Student, Region
 from users.models import Users
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    region = serializers.PrimaryKeyRelatedField(queryset=Region.objects.all(),
+                                                write_only=True)  # Ensure region is processed correctly
+
     class Meta:
         model = Users
         fields = '__all__'
@@ -16,15 +19,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        print("Validated Data:", validated_data)  # Debugging step
+
         password = validated_data.pop('password')
-        role = validated_data.get('role')
-        if role is None:
-            role = 'user'
-        user = Users.objects.create(**validated_data)
+        region = validated_data.pop('region', None)  # ✅ Remove region before creating Users
+        role = validated_data.get('role', 'user')  # Default to 'user'
+
+        user = Users.objects.create(**validated_data)  # ✅ No unexpected keyword arguments now
         user.set_password(password)
         user.save()
-        if role == 'user':
-            Student.objects.create(user=user)
+
+        if role == 'user' and region:  # ✅ Ensure region is not None
+            Student.objects.create(user=user, region=region)  # ✅ Assign region to Student
+
         return user
 
 
@@ -78,6 +85,7 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
                 "sex": user.sex,
                 "born_date": user.born_date,
                 "email": user.email,
+                'student_id': user.student_set.first().id if user.student_set.exists() else None
             })
         except Users.DoesNotExist:
             data.update({"error": "User not found"})
