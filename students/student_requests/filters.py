@@ -11,10 +11,11 @@ class StudentRequestFilter(django_filters.FilterSet):
     shift_id = django_filters.NumberFilter(field_name="shift_id")
     field_id = django_filters.NumberFilter(field_name="field_id")
     status = django_filters.CharFilter(method='filter_status')
+    student_id = django_filters.NumberFilter(field_name='student_id')
 
     class Meta:
         model = StudentRequest
-        fields = ['degree_id', 'language_id', 'type_id', 'shift_id', 'field_id', 'status']
+        fields = ['degree_id', 'language_id', 'type_id', 'shift_id', 'field_id', 'status', 'student_id']
 
     def filter_status(self, queryset, name, value):
 
