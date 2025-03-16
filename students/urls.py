@@ -12,4 +12,5 @@ urlpatterns = [
     path('student_request/<int:pk>/', StudentRequestRetrieveView.as_view(), name='student-request'),
     path('acedemic_year/', include('students.academic_year.api.get.urls')),
     path('shift/', include('students.shift.api.get.urls')),
+    path('notification/', include('students.notification.urls')),
 ]
