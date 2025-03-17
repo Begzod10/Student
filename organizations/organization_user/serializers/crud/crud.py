@@ -3,6 +3,8 @@ from organizations.models import OrganizationUser, Jobs, OrganizationType, Organ
 from users.models import Users
 from django.core.exceptions import ValidationError
 
+from rest_framework.response import Response
+
 
 class UserCreateSerializer(serializers.ModelSerializer):
     """
@@ -14,6 +16,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'surname', 'username', 'phone_extra', 'file']
 
     def create(self, validated_data):
+        print(validated_data)
+        exists = Users.objects.filter(phone=validated_data['phone_extra']).exists()
+        exists_user = Users.objects.filter(username=validated_data['username']).exists()
+        if exists:
+            return Response({"phone": "Users with this phone already exists."})
+        if exists_user:
+            return Response({"username": "Users with this username already exists."})
         user = Users.objects.create(**validated_data)
         user.set_password("12345678")
         user.role = "organization"
