@@ -13,4 +13,4 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_created_at(self, obj):
-        return obj.created_at.strftime('%Y-%m-%d')
+        return obj.created_at.strftime('%Y-%m-%d') if obj.created_at else None

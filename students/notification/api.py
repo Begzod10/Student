@@ -1,8 +1,12 @@
+import pprint
+
 from rest_framework import generics
 
 from students.models.notification import Notification
 from students.models.student import Student
 from students.notification.serializers import NotificationSerializer
+from organizations.models.models import Organization
+from organizations.organization.serializers.get.retrieve_view import OrganizationSerializer
 
 
 class NotificationRetrieve(generics.RetrieveAPIView):
@@ -38,8 +42,9 @@ class NotificationForStudentView(generics.ListAPIView):
                     student = Student.objects.get(id=self.kwargs['pk'])
                 except Student.DoesNotExist:
                     return Notification.objects.none()
+            notifications = Notification.objects.filter(student=student).select_related('organization').order_by('id')
 
-            return Notification.objects.filter(student=student).select_related('organization').order_by('id')
+            return notifications
 
         elif type_param == 'organization':
             organization_id = self.kwargs['pk']
