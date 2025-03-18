@@ -58,7 +58,6 @@ def sync_phone_username(sender, instance, **kwargs):
 
     elif not instance.phone and instance.username:
         instance.phone = instance.username
-    print(instance.phone, instance.username)
     if Users.objects.filter(phone=instance.phone).exclude(id=instance.id).exists():
         raise ValidationError("This phone number is already in use. Please use a different phone number.")
     if Users.objects.filter(username=instance.username).exclude(id=instance.id).exists():

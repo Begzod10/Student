@@ -39,18 +39,18 @@ class StudentRequestListView(generics.ListAPIView):
     #             student = Student.objects.get(user_id=student_id)
     #             queryset = queryset.filter(student=student)
     #         except Student.DoesNotExist:
-    #             print("Student not found")
     #             return queryset.none()
     #     return queryset
 
-    # def list(self, request, *args, **kwargs):
-    #     """
-    #     Override list to manually serialize data for debugging.
-    #     """
-    #     queryset = self.get_queryset()
-    #     print("Final queryset before serialization:", queryset)
-    #
-    #     serializer = self.get_serializer(queryset, many=True)
-    #     print("Serialized Data:", serializer.data)
-    #
-    #     return Response(serializer.data)
+    def list(self, request, *args, **kwargs):
+        """
+        Override list to manually serialize data for debugging.
+        """
+        if self.request.query_params.get('organization'):
+            queryset = self.get_queryset().filter(organization_id=self.request.query_params.get('organization'))
+        else:
+            queryset = self.get_queryset()
+
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)

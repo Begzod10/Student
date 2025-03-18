@@ -1,9 +1,8 @@
 from rest_framework import generics
 
 from students.models.notification import Notification
+from students.models.student import Student
 from students.notification.serializers import NotificationSerializer
-from organizations.models import Organization
-from organizations.organization.serializers.get.retrieve_view import OrganizationSerializer
 
 
 class NotificationRetrieve(generics.RetrieveAPIView):
@@ -30,15 +29,20 @@ class NotificationForStudentView(generics.ListAPIView):
     serializer_class = NotificationSerializer
 
     def get_queryset(self):
-        student = self.request.user.student  # Assuming User has a related Student object
+        type_param = self.request.query_params.get('type', None)
+        if type_param == 'student':
+            try:
+                student = Student.objects.get(user_id=self.kwargs['pk'])
+            except Student.DoesNotExist:
+                try:
+                    student = Student.objects.get(id=self.kwargs['pk'])
+                except Student.DoesNotExist:
+                    return Notification.objects.none()
 
-        # Get all notifications for the student
-        get_notification = Notification.objects.filter(student=student)
+            return Notification.objects.filter(student=student).select_related('organization')
 
-        # Extract unique organization IDs from these notifications
-        organization_ids = get_notification.values_list("organization_id", flat=True).distinct()
+        elif type_param == 'organization':
+            organization_id = self.kwargs['pk']
+            return Notification.objects.filter(organization_id=organization_id).select_related('student')
 
-        # Filter organizations based on the extracted organization IDs
-        organizations = Organization.objects.filter(id__in=organization_ids)
-
-        return OrganizationSerializer(organizations, many=True).data
+        return Notification.objects.none()

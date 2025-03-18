@@ -63,13 +63,14 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     region = serializers.SerializerMethodField()
     price = serializers.CharField(source='landing_page.price')
+    student_id = serializers.IntegerField(source='student.id')
 
     # direction ta'lim yo'nalishi xali qoshilmadi
 
     class Meta:
         model = StudentRequest
         fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date', 'accepted', 'field', 'image', 'region',
-                  'price']
+                  'price','student_id']
 
     def get_name(self, obj):
         name_parts = []

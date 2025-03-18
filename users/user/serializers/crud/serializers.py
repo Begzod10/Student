@@ -19,7 +19,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        print("Validated Data:", validated_data)  # Debugging step
 
         password = validated_data.pop('password')
         region = validated_data.pop('region', None)  # ✅ Remove region before creating Users
@@ -50,7 +49,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         user = authenticate(phone=phone, password=password)
         if not user:
-            print(phone, password)
             user = authenticate(username=phone, password=password)
             if not user:
                 raise AuthenticationFailed({'detail': "Telefon raqam yoki parol noto‘g‘ri", 'status': False})

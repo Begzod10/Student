@@ -16,7 +16,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'surname', 'username', 'phone_extra', 'file']
 
     def create(self, validated_data):
-        print(validated_data)
         exists = Users.objects.filter(phone=validated_data['phone_extra']).exists()
         exists_user = Users.objects.filter(username=validated_data['username']).exists()
         if exists:
@@ -68,7 +67,6 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
             user_serializer = UserCreateSerializer(instance=instance.user, data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
-            print(instance.user)
             validated_data['user'] = instance.user
 
         for attr, value in validated_data.items():
@@ -79,7 +77,6 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
     def delete(self, instance):
         user = instance.user
         get_user = Users.objects.get(id=user.id)
-        print(get_user)
         get_user.delete()
         instance.delete()
         user.delete()
