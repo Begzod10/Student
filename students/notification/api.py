@@ -39,10 +39,10 @@ class NotificationForStudentView(generics.ListAPIView):
                 except Student.DoesNotExist:
                     return Notification.objects.none()
 
-            return Notification.objects.filter(student=student).select_related('organization')
+            return Notification.objects.filter(student=student).select_related('organization').order_by('id')
 
         elif type_param == 'organization':
             organization_id = self.kwargs['pk']
-            return Notification.objects.filter(organization_id=organization_id).select_related('student')
+            return Notification.objects.filter(organization_id=organization_id).select_related('student').order_by('id')
 
         return Notification.objects.none()
