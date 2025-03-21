@@ -1,5 +1,8 @@
+from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from organizations.models import Organization
 from organizations.models.models import OrganizationGallery
@@ -80,3 +83,57 @@ class HomeOrganizationRetrieveLandingPageDeegreeView(generics.ListAPIView):
 class ProfileLandingPageView(generics.RetrieveAPIView):
     serializer_class = OrganizationOrganizationLandingPageSerializer2
     queryset = OrganizationLandingPage.objects.all()
+
+
+
+class HomeOrganizationCombinedView(APIView):
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            # Barcha ma'lumotlarni yig'ish
+            response_data = {
+                'description': self.get_description(pk),
+                'advantages': self.get_advantages(pk),
+                'gallery': self.get_gallery(pk),
+                'degree': self.get_degree(pk),
+                'landing': self.get_landing(pk),
+            }
+            return Response(response_data)
+        except Exception as e:
+            raise Http404(f"Error retrieving data: {str(e)}")
+
+    def get_description(self, pk):
+        try:
+            obj = Organization.objects.get(pk=pk)
+            serializer = OrganizationDescSerializer(obj)
+            return serializer.data
+        except Organization.DoesNotExist:
+            return None
+
+    def get_advantages(self, pk):
+        queryset = OrganizationAdvantage.objects.filter(organization_id=pk)
+        if not queryset.exists():
+            return []
+        serializer = OrganizationAdvantagesSerializer(queryset, many=True)
+        return serializer.data
+
+    def get_gallery(self, pk):
+        queryset = OrganizationGallery.objects.filter(organization_id=pk)
+        if not queryset.exists():
+            return []
+        serializer = OrganizationGallerySerializer(queryset, many=True)
+        return serializer.data
+
+    def get_degree(self, pk):
+        queryset = OrganizationLandingPage.objects.filter(degree_id=pk)
+        if not queryset.exists():
+            return []
+        serializer = OrganizationOrganizationLandingPageSerializer(queryset, many=True)
+        return serializer.data
+
+    def get_landing(self, pk):
+        try:
+            obj = OrganizationLandingPage.objects.get(pk=pk)
+            serializer = OrganizationOrganizationLandingPageSerializer2(obj)
+            return serializer.data
+        except OrganizationLandingPage.DoesNotExist:
+            return None

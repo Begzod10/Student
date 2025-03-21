@@ -67,13 +67,13 @@ class OrganizationDescUpdateSerializer(serializers.ModelSerializer):
 
 
 class OrganizationHomeSerializer(serializers.ModelSerializer):
-    region = serializers.CharField(source='region.name', read_only=True)
-    desc = serializers.SerializerMethodField()
-    organization_type = serializers.CharField(source='organization_type.name', read_only=True)
-    organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
-    advantages = serializers.SerializerMethodField()
+    # region = serializers.CharField(source='region.name', read_only=True)
+    # desc = serializers.SerializerMethodField()
+    # organization_type = serializers.CharField(source='organization_type.name', read_only=True)
+    # organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
+    # advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
-    degree = serializers.SerializerMethodField()
+    # degree = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
@@ -81,15 +81,15 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'locations',
-            'desc',
-            'phone',
+            # 'desc',
+            # 'phone',
             'img',
             'organization_type',
-            'organization_type_id',
-            'region',
-            'advantages',
+            # 'organization_type_id',
+            # 'region',
+            # 'advantages',
             'landing',
-            'degree'
+            # 'degree'
         ]
 
     def get_landing(self, obj):
@@ -98,18 +98,17 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
         if obj:
             data = {
                 'id': obj.id,
-                'start_date': obj.start_date,
-                'expired_date': obj.expire_date,
-                'education_language': obj.education_language.name,
+                # 'start_date': obj.start_date,
+                # 'expired_date': obj.expire_date,
                 'shift': obj.shift.name,
                 'price': obj.price if obj else None,
-                'degree': obj.degree.name,
-                'field': obj.field.name if obj.field else None,
+                # 'degree': obj.degree.name,
+                # 'field': obj.field.name if obj.field else None,
                 'requirements': obj.requirements,
                 'language': obj.education_language.name if obj.education_language else None,
                 'grant': obj.grant,
-                'desc': obj.desc,
-                'desc_json': obj.desc_json
+                # 'desc': obj.desc,
+                # 'desc_json': obj.desc_json
             }
             return data
 

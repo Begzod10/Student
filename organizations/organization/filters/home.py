@@ -10,7 +10,8 @@ class OrganizationLandingPageFilter(filters.FilterSet):
     shift = filters.BaseInFilter(field_name="organizationlandingpage__shift__id")
     language = filters.BaseInFilter(field_name="organizationlandingpage__education_language__id")
     price = filters.RangeFilter(field_name="organizationlandingpage__price")
+    grant = filters.BooleanFilter(field_name="organizationlandingpage__grant")
 
     class Meta:
         model = Organization
-        fields = ['organization_type', 'region', 'degree', 'shift', 'price']
+        fields = ['organization_type', 'region', 'degree', 'shift', 'price','grant']
