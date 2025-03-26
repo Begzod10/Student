@@ -17,10 +17,10 @@ class StudentRequestUpdateView(generics.UpdateAPIView):
         instance = self.get_object()
         status = request.data.get('status')
         if status == "rejectedRequest":
-            instance.cancel = True
+            instance.canceled = True
             instance.request_status = "rejectedRequest"
         elif status == "acceptedRequest":
-            instance.accept = True
+            instance.accepted = True
             instance.request_status = "acceptedRequest"
         elif status == "returnRequest":
             instance.back_recovery = True

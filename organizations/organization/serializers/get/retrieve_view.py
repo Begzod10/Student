@@ -73,6 +73,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
     # organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
     # advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
+
     # degree = serializers.SerializerMethodField()
 
     class Meta:
@@ -214,6 +215,8 @@ class OrganizationOrganizationLandingPageSerializer2(serializers.ModelSerializer
     region = serializers.CharField(source='organization.region.name')
     grand = serializers.CharField(source='organization.grand_text')
     location = serializers.CharField(source='organization.locations')
+    img = serializers.CharField(source='organization.img')
+    field = serializers.SerializerMethodField()
 
     class Meta:
         model = OrganizationLandingPage
@@ -227,7 +230,11 @@ class OrganizationOrganizationLandingPageSerializer2(serializers.ModelSerializer
             'region',
             'grand',
             'location',
-            'start_date'
+            'start_date',
+            'expire_date',
+            'desc_json',
+            'img',
+            'field'
         ]
 
     def get_type(self, obj):
@@ -235,3 +242,11 @@ class OrganizationOrganizationLandingPageSerializer2(serializers.ModelSerializer
             return obj.requirements or None
         else:
             return obj.degree.name or None
+
+    def get_field(self, obj):
+        data = {
+            'id': obj.field.id,
+            'name': obj.field.name,
+            'desc': obj.field.desc
+        }
+        return data

@@ -1,15 +1,20 @@
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
-from students.models import Student, Region
+from organizations.models.organization_landing_page import OrganizationLandingPage
+from students.models import Region
+from students.models.student import StudentRequest, Student
 from users.models import Users
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     region = serializers.PrimaryKeyRelatedField(queryset=Region.objects.all(),
-                                                write_only=True)  # Ensure region is processed correctly
+                                                write_only=True)
+    landing = serializers.CharField(write_only=True, required=False, allow_null=True,
+                                    allow_blank=True)  # Ensure region is processed correctly
 
     class Meta:
         model = Users
@@ -22,7 +27,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop('password')
         region = validated_data.pop('region', None)  # ✅ Remove region before creating Users
-        role = validated_data.get('role', 'user')  # Default to 'user'
+        role = validated_data.get('role', 'user')
+        landing = validated_data.pop('landing', None)
 
         user = Users.objects.create(**validated_data)  # ✅ No unexpected keyword arguments now
         user.set_password(password)
@@ -30,6 +36,35 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         if role == 'user' and region:  # ✅ Ensure region is not None
             Student.objects.create(user=user, region=region)  # ✅ Assign region to Student
+
+        if landing:
+            landing_page = get_object_or_404(OrganizationLandingPage, id=landing)
+            student = get_object_or_404(Student, user=user)
+
+            if StudentRequest.objects.filter(
+                    student=student,
+                    organization=landing_page.organization,
+                    shift=landing_page.shift,
+                    field=landing_page.field,
+                    language=landing_page.education_language,
+                    year=landing_page.year,
+                    degree=landing_page.degree,
+                    landing_page=landing_page,
+            ).exists():
+                raise serializers.ValidationError({"detail": "Siz allaqachon bu yo'nalishdan ro'yhatdan o'tgansiz!"})
+
+            obj = StudentRequest.objects.create(
+                student=student,
+                organization=landing_page.organization,
+                shift=landing_page.shift,
+                field=landing_page.field,
+                language=landing_page.education_language,
+                year=landing_page.year,
+                degree=landing_page.degree,
+                landing_page=landing_page,
+            )
+
+            return {"detail": "Arizangiz topshirildi!"}
 
         return user
 

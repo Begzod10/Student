@@ -1,8 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.filters import SearchFilter
-from rest_framework.response import Response
-from students.models.student import StudentRequest, Student
+
+from students.models.student import StudentRequest
 from students.student_requests.filters import StudentRequestFilter
 from students.student_requests.serializers.get.get import StudentRequestListSerializer
 
@@ -42,15 +42,14 @@ class StudentRequestListView(generics.ListAPIView):
     #             return queryset.none()
     #     return queryset
 
-    def list(self, request, *args, **kwargs):
-        """
-        Override list to manually serialize data for debugging.
-        """
+    def get_queryset(self):
+
+        queryset = super().get_queryset()
+
         if self.request.query_params.get('organization'):
-            queryset = self.get_queryset().filter(organization_id=self.request.query_params.get('organization'))
-        else:
-            queryset = self.get_queryset()
+            queryset = queryset.filter(organization_id=self.request.query_params.get('organization'))
 
-        serializer = self.get_serializer(queryset, many=True)
+        if self.request.query_params.get('student_id'):
+            queryset = queryset.filter(student_id=self.request.query_params.get('student_id'))
 
-        return Response(serializer.data)
+        return queryset
