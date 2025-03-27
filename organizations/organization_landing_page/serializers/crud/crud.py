@@ -1,7 +1,4 @@
-import pprint
-
 from rest_framework import serializers
-from rest_framework.response import Response
 
 from education.education.serializers.get.retriviev import EducationLanguage
 from organizations.models.models import OrganizationDegrees
@@ -53,8 +50,6 @@ class OrganizationLandingPageCrudSerializer(serializers.ModelSerializer):
         return "E'lon muvaffaqiyatlik yaratildi!"
 
     def update(self, instance, validated_data):
-        pprint.pprint(validated_data)
-
         instance.year = validated_data.pop('year', None)
         instance.organization = validated_data.pop('organization', None)
         instance.degree = validated_data.pop('degree')
@@ -105,5 +100,4 @@ class OrganizationLandingPageUpdateSerializer(serializers.ModelSerializer):
         return getattr(self, 'custom_message', "Yo'nalish muvaffaqiyatli o'zgartirildi")
 
     def update(self, instance, validated_data):
-        print(validated_data)
         return super().update(instance, validated_data)

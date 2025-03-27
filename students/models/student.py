@@ -44,7 +44,7 @@ class StudentRequest(models.Model):
     contract_given = models.BooleanField(default=False)
     payed_status = models.BooleanField(default=False)
     accepted_to_study = models.BooleanField(default=False)
-    request_status = models.BigIntegerField(null=True)
+    request_status = models.CharField(null=True)
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):

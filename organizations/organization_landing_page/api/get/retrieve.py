@@ -13,5 +13,4 @@ class OrganizationLandingPageRetrieve(generics.ListAPIView):
         queryset = OrganizationLandingPage.objects.all()
         if organization_id is not None:
             queryset = queryset.filter(organization_id=organization_id)
-            print(f"Filtered by Organization ID: {queryset}")
         return queryset

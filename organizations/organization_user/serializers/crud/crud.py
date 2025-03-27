@@ -3,6 +3,8 @@ from organizations.models import OrganizationUser, Jobs, OrganizationType, Organ
 from users.models import Users
 from django.core.exceptions import ValidationError
 
+from rest_framework.response import Response
+
 
 class UserCreateSerializer(serializers.ModelSerializer):
     """
@@ -14,6 +16,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'surname', 'username', 'phone_extra', 'file']
 
     def create(self, validated_data):
+        exists = Users.objects.filter(phone=validated_data['phone_extra']).exists()
+        exists_user = Users.objects.filter(username=validated_data['username']).exists()
+        if exists:
+            return Response({"phone": "Users with this phone already exists."})
+        if exists_user:
+            return Response({"username": "Users with this username already exists."})
         user = Users.objects.create(**validated_data)
         user.set_password("12345678")
         user.role = "organization"
@@ -59,7 +67,6 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
             user_serializer = UserCreateSerializer(instance=instance.user, data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
-            print(instance.user)
             validated_data['user'] = instance.user
 
         for attr, value in validated_data.items():
@@ -70,7 +77,6 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
     def delete(self, instance):
         user = instance.user
         get_user = Users.objects.get(id=user.id)
-        print(get_user)
         get_user.delete()
         instance.delete()
         user.delete()

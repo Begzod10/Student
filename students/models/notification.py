@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Notification(models.Model):
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     organization = models.ForeignKey('organizations.Organization', on_delete=models.CASCADE)
     desc_json = models.JSONField(null=True, blank=True)

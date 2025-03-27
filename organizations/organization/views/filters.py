@@ -54,7 +54,6 @@ def organizations_filter(request, pk):
     except OrganizationType.DoesNotExist:
         return Response({"error": "OrganizationType not found"}, status=404)
     except Exception as e:
-        print(e)
         return Response({"error": str(e)}, status=500)
 
 
