@@ -10,6 +10,6 @@ urlpatterns = [
     path('student_requests/', include('students.student_requests.urls')),
     path('region/crud/', include('students.region.api.crud.urls')),
     path('student_request/<int:pk>/', StudentRequestRetrieveView.as_view(), name='student-request'),
-    path('acedemic_year/', include('students.academic_year.api.get.urls')),
+    path('acedem.ic_year/', include('students.academic_year.api.get.urls')),
     path('shift/', include('students.shift.api.get.urls')),
 ]
