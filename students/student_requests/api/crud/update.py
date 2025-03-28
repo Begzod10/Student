@@ -31,5 +31,5 @@ class StudentRequestUpdateView(generics.UpdateAPIView):
         instance.save()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        # self.perform_update(serializer)
+        # self.perform_update(serializers)
         return Response(serializer.data)

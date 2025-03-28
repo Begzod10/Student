@@ -35,9 +35,7 @@ class TestCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
 
     def create(self, validated_data):
-        print(validated_data)  # Debug uchun
-        blocks_data = validated_data.pop('blocks', [])  # blocks ni validated_data ichidan olish
-        print(blocks_data)  # Debug uchun
+        blocks_data = validated_data.pop('blocks', [])
 
         test = Test.objects.create(**validated_data)
 
