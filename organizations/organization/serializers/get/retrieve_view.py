@@ -32,6 +32,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         ]
 
     def get_request_count(self, obj):
+        register_academic_year()
         from students.models.student import StudentRequest
         count = StudentRequest.objects.filter(organization=obj).count()
         return count
