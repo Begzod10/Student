@@ -2,3 +2,5 @@
 	repositoryformatversion = 0
 	filemode = true
 	bare = true
+[safe]
+	directory = /var/www/ntt/data/www/ntt.avotra.ru/ntt/repo.git
