@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from organizations.models.models import Organization
+from organizations.models.organization_user import OrganizationUser
 from organizations.models.models import OrganizationGallery
 from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
 from organizations.organization_type.serializers.get.list import OrganizationTypeSerializerList
@@ -146,7 +147,6 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
 class OrganizationDescSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='organization_type.name', read_only=True)
-    organization_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
@@ -158,13 +158,8 @@ class OrganizationDescSerializer(serializers.ModelSerializer):
             'grand_text',
             'grand_json',
             'inn',
-            'img',
-            'organization_user'
+            'img'
         ]
-
-    def get_organization_user(self, obj):
-        register_academic_year()
-        return RetrieveUserInfosForRegister(obj).data
 
 
 class OrganizationAdvantagesSerializer(serializers.ModelSerializer):
