@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'students',
     'django_filters',
     'rest_framework_simplejwt',
+    'test'
 ]
 
 REST_FRAMEWORK = {

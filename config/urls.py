@@ -17,7 +17,8 @@ urlpatterns = [
     path('api/region/', include('students.region.api.urls')),
     path('api/shift/', include('students.shift.api.urls')),
     path('api/education_language/', include('education.education.api.urls')),
-    path('api/organization_fields/', include('organizations.organization_fields.urls'))
+    path('api/organization_fields/', include('organizations.organization_fields.urls')),
+    path('api/test/', include('test.urls'))
 
 ]
 if settings.DEBUG:

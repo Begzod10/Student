@@ -60,10 +60,27 @@ class NotificationForStudentView(generics.ListAPIView):
         return Notification.objects.none()
 
 
+# class NotificationForOrganizationView(generics.ListAPIView):
+#     serializer_class = NotificationOrganizationSerializer
+#
+#     def get_queryset(self):
+#
+#         try:
+#             student = Student.objects.get(user_id=self.kwargs['pk'])
+#         except Student.DoesNotExist:
+#             try:
+#                 student = Student.objects.get(id=self.kwargs['pk'])
+#             except Student.DoesNotExist:
+#                 return Notification.objects.none()
+#         notifications = Notification.objects.filter(student=student).select_related('organization').order_by('id')
+#         return Organization.objects.filter(id__in=[notification.organization_id for notification in notifications]).distinct()
+
 class NotificationForOrganizationView(generics.ListAPIView):
     serializer_class = NotificationOrganizationSerializer
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Organization.objects.none()
 
         try:
             student = Student.objects.get(user_id=self.kwargs['pk'])
@@ -72,5 +89,7 @@ class NotificationForOrganizationView(generics.ListAPIView):
                 student = Student.objects.get(id=self.kwargs['pk'])
             except Student.DoesNotExist:
                 return Notification.objects.none()
+
         notifications = Notification.objects.filter(student=student).select_related('organization').order_by('id')
-        return Organization.objects.filter(id__in=[notification.organization_id for notification in notifications]).distinct()
+        return Organization.objects.filter(
+            id__in=[notification.organization_id for notification in notifications]).distinct()
