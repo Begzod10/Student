@@ -6,6 +6,7 @@ from organizations.models.organization_landing_page import OrganizationAdvantage
 from organizations.organization_type.serializers.get.list import OrganizationTypeSerializerList
 from students.academic_year.functions.register_academic_year import register_academic_year
 from students.region.serializers.get.retrieve_view import RegionSerializer
+from users.user.serializers.get.retirview import RetrieveUserInfosForRegister
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -145,14 +146,25 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
 class OrganizationDescSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='organization_type.name', read_only=True)
+    organization_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
         fields = [
             'id',
             'desc',
-            'type'
+            'type',
+            'desc_json',
+            'grand_text',
+            'grand_json',
+            'inn',
+            'img',
+            'organization_user'
         ]
+
+    def get_organization_user(self, obj):
+        register_academic_year()
+        return RetrieveUserInfosForRegister(obj).data
 
 
 class OrganizationAdvantagesSerializer(serializers.ModelSerializer):
