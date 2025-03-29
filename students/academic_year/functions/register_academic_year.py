@@ -10,6 +10,4 @@ def register_academic_year():
         to=date(next_year, 1, 1)
     )
 
-
-
     return academic_year
