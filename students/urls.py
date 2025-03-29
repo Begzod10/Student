@@ -1,8 +1,10 @@
-from django.urls import path
 from students.student_requests.views import StudentRequestListView, StudentRequestRetrieveView, \
     student_request_dashboard
-from django.contrib import admin
 from django.urls import path, include
+from django.urls import path, include
+
+from students.student_requests.views import StudentRequestListView, StudentRequestRetrieveView, \
+    student_request_dashboard
 
 urlpatterns = [
     path('student_request_list/', StudentRequestListView.as_view(), name='student-request-list'),
