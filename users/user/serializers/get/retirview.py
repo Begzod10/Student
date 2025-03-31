@@ -15,6 +15,8 @@ class RetrieveUserInfosForRegister(serializers.ModelSerializer):
     def get_organization_id(self, obj):
         org_user = obj.organization_users.first()
         return org_user.organization.id if org_user else None
+        return OrganizationUser.objects.filter(user=obj).first().organization.id if OrganizationUser.objects.filter(
+            user=obj).exists() else None
 
     class Meta:
         model = Users
