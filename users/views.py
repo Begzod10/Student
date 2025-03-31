@@ -1,3 +1,3 @@
 from django.shortcuts import render
 
-# Create your api here.
+# Create your get here.

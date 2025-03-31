@@ -6,19 +6,19 @@ from django.urls import path, include
 from users.user.api.crud.login import CustomTokenObtainPairView, CustomTokenRefreshView
 
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
-    path('api/', include('config.utils.swagger')),
-    path('api/students/', include('students.urls')),
-    path('api/users/', include('users.user.urls')),
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
-    path('api/organizations/', include('organizations.urls')),
-    path('api/organization-degrees/', include('organizations.organization_degree.api.urls')),
-    path('api/region/', include('students.region.api.urls')),
-    path('api/shift/', include('students.shift.api.urls')),
-    path('api/education_language/', include('education.education.api.urls')),
-    path('api/organization_fields/', include('organizations.organization_fields.urls')),
-    path('api/test/', include('test.urls'))
+    path('get/admin/', admin.site.urls),
+    path('get/', include('config.utils.swagger')),
+    path('get/students/', include('students.urls')),
+    path('get/users/', include('users.user.urls')),
+    path('get/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('get/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    path('get/organizations/', include('organizations.urls')),
+    path('get/organization-degrees/', include('organizations.organization_degree.api.urls')),
+    path('get/region/', include('students.region.api.urls')),
+    path('get/shift/', include('students.shift.api.urls')),
+    path('get/education_language/', include('education.education.api.urls')),
+    path('get/organization_fields/', include('organizations.organization_fields.urls')),
+    path('get/test/', include('test.urls'))
 
 ]
 if settings.DEBUG:

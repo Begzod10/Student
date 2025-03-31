@@ -28,3 +28,12 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
+
+
+class TestListSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(read_only=True)
+    field = OrganizationFieldsListSerializers(read_only=True)
+
+    class Meta:
+        model = Test
+        fields = ['id', 'name', 'field', 'subject', 'duration']

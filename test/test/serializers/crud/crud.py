@@ -2,29 +2,7 @@ from rest_framework import serializers
 from test.models.models import Test
 from test.models.test_question import TestQuestion
 from test.models.test_block import TestBlock
-from organizations.models.organization_fields import OrganizationFields
-from test.models.subject import Subject
-
-
-class TestQuestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TestQuestion
-        fields = ['id', 'block', 'test', 'isTrue', 'answer', 'to_json']
-
-
-class TestBlockSerializer(serializers.ModelSerializer):
-    questions = TestQuestionSerializer(many=True)
-
-    class Meta:
-        model = TestBlock
-        fields = ['id', 'test', 'text', 'to_json', 'questions']
-
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions', [])
-        block = TestBlock.objects.create(**validated_data)
-        for question_data in questions_data:
-            TestQuestion.objects.create(block=block, test=validated_data['test'], **question_data)
-        return block
+from test.block.serializers.crud.crud import TestBlockSerializer
 
 
 class TestCreateSerializer(serializers.ModelSerializer):
