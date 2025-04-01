@@ -19,7 +19,6 @@ urlpatterns = [
     path('api/education_language/', include('education.education.api.urls')),
     path('api/organization_fields/', include('organizations.organization_fields.urls')),
     path('api/test/', include('test.urls'))
-
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

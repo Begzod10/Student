@@ -9,7 +9,7 @@ from organizations.organization_fields.serializers.get.list import OrganizationF
 class TestQuestionSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = TestQuestion
-        fields = ['id', 'isTrue', 'answer', 'to_json']
+        fields = ['id', 'isTrue', 'answer', 'to_json', 'image']
 
 
 class TestBlockSerializerGet(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class TestBlockSerializerGet(serializers.ModelSerializer):
 
     class Meta:
         model = TestBlock
-        fields = ['id', 'text', 'to_json', 'questions']
+        fields = ['id', 'text', 'to_json', 'questions', 'image']
 
 
 class TestRetrieveSerializer(serializers.ModelSerializer):
@@ -28,3 +28,12 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
+
+
+class TestListSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(read_only=True)
+    field = OrganizationFieldsListSerializers(read_only=True)
+
+    class Meta:
+        model = Test
+        fields = ['id', 'name', 'field', 'subject', 'duration']
