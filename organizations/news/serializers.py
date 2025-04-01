@@ -14,7 +14,8 @@ class NewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ['id', 'title', 'desc_json', 'img', 'date', 'deleted', 'views_display', 'shared', 'landing','visitor_id']
+        fields = ['id', 'title', 'desc_json', 'img', 'date', 'deleted', 'views_display', 'shared', 'landing',
+                  'visitor_id', 'organization']
 
     def get_views_display(self, obj):
         view_count = NewsView.objects.filter(news=obj).count()

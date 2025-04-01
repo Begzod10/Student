@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from .serializers import NewsSerializer
 from ..models.news import News, NewsView
-
+from pprint import pprint
 from django.utils.crypto import get_random_string
 
 
@@ -14,9 +14,17 @@ class NewsViewSet(viewsets.ModelViewSet):
     queryset = News.objects.filter(deleted=False)
     serializer_class = NewsSerializer
 
+    def create(self, request, *args, **kwargs):
+        # Serializerdan foydalanish
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-
         # Frontenddan visitor_id ni olish
         visitor_id = request.headers.get('X-Visitor-ID')
 
