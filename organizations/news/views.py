@@ -2,11 +2,13 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-
+from rest_framework.generics import ListAPIView
 from .serializers import NewsSerializer
 from ..models.news import News, NewsView
 
 from django.utils.crypto import get_random_string
+
+
 class NewsViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     queryset = News.objects.filter(deleted=False)
@@ -17,7 +19,6 @@ class NewsViewSet(viewsets.ModelViewSet):
 
         # Frontenddan visitor_id ni olish
         visitor_id = request.headers.get('X-Visitor-ID')
-
 
         if not visitor_id or visitor_id in ('', 'null'):
             visitor_id = get_random_string(32)
@@ -34,3 +35,11 @@ class NewsViewSet(viewsets.ModelViewSet):
         instance.deleted = True
         instance.save()
         return Response({"message": "News deleted successfully."}, status=status.HTTP_200_OK)
+
+
+class NewsViewOrganizationList(ListAPIView):
+    serializer_class = NewsSerializer
+
+    def get_queryset(self):
+        organization_id = self.kwargs['organization_id']
+        return News.objects.filter(organization=organization_id, deleted=False)
