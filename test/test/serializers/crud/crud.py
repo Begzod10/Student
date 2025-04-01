@@ -32,7 +32,7 @@ class TestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['name', 'subject', 'duration', 'blocks']
+        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
 
     def update(self, instance, validated_data):
         blocks_data = validated_data.pop('blocks', [])

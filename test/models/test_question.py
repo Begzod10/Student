@@ -9,3 +9,4 @@ class TestQuestion(models.Model):
     isTrue = models.BooleanField(default=False)
     answer = models.CharField(max_length=255, null=True, blank=True)
     to_json = models.JSONField(default=dict, blank=True, null=True)
+    image = models.ImageField(upload_to='test_questions/', null=True, blank=True)  # Yangi rasm maydoni qo'shildi
