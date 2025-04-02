@@ -13,6 +13,8 @@ from django.utils.translation import gettext_lazy as _
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'jazzmin',
+
     'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -158,3 +160,7 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS',
 ]
+JAZZMIN_SETTINGS = {
+    "show_ui_builder": True,
+
+}
