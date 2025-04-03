@@ -13,6 +13,8 @@ from django.utils.translation import gettext_lazy as _
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'jazzmin',
+
     'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -123,7 +125,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static_admin/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -147,10 +149,9 @@ CACHES = {
 SESSION_COOKIE_AGE = 1209600
 SESSION_SAVE_EVERY_REQUEST = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-Visitor-ID',  # Frontend yuboradigan header
+    'X-Visitor-ID',
 ]
 
-# Agar kerak bo'lsa, usullarga ruxsat
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
@@ -159,3 +160,7 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS',
 ]
+JAZZMIN_SETTINGS = {
+    "show_ui_builder": True,
+
+}
