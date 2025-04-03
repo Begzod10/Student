@@ -6,8 +6,8 @@ TARGET_BRANCH="refs/heads/server"
 
 if [[ $refname = $TARGET_BRANCH ]]; then
 
-  WORK_DIR=/home/ntt/backend
-  GIT_DIR=/home/ntt/backend/repo.git
+  WORK_DIR=/var/www/ntt/data/www/ntt.avotra.ru/ntt
+  GIT_DIR=/var/www/ntt/data/www/ntt.avotra.ru/ntt/repo.git
   
   cd $WORK_DIR || exit 1
 
@@ -17,7 +17,7 @@ if [[ $refname = $TARGET_BRANCH ]]; then
 
   sudo systemctl restart ntt
 
-  source /home/ntt/backend/venv/bin/activate
+  source /var/www/ntt/data/www/ntt.avotra.ru/ntt/venv/bin/activate
 
   ./manage.py migrate
 
