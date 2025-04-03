@@ -7,7 +7,7 @@ from users.user.api.crud.login import CustomTokenObtainPairView, CustomTokenRefr
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    path('api/', include('config.utils.swagger')),
+    # path('api/', include('config.utils.swagger')),
     path('api/students/', include('students.urls')),
     path('api/users/', include('users.user.urls')),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
