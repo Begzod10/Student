@@ -151,14 +151,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-Visitor-ID',
 ]
 
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS',
-]
+
 JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
 
