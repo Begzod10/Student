@@ -13,13 +13,16 @@ class OrganizationLandingPage(models.Model):
     expire_date = models.DateField()
     start_date = models.DateField(null=True)
     degree = models.ForeignKey("OrganizationDegrees", on_delete=models.SET_NULL, null=True, blank=True)
-    education_language = models.ForeignKey(EducationLanguage, on_delete=models.CASCADE, null=True)
+    education_language = models.ManyToManyField("education.EducationLanguage")
     deleted = models.BooleanField(default=False)
     grant = models.BooleanField(default=False)
     price = models.BigIntegerField(null=True)
     requirements = models.TextField(null=True, blank=True)
-    shift = models.ForeignKey(Shift, on_delete=models.SET_NULL, null=True, blank=True)
-    field = models.ForeignKey("organizations.OrganizationFields", on_delete=models.SET_NULL, null=True, blank=True)
+
+    # CHANGED: Shift and Field to ManyToMany
+    shift = models.ForeignKey(Shift, blank=True, on_delete=models.SET_NULL, null=True)
+    field = models.ManyToManyField("organizations.OrganizationFields", blank=True)
+
     desc_json = models.JSONField(null=True, blank=True)
     requirements_json = models.JSONField(null=True, blank=True)
 
