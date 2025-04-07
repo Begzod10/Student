@@ -16,9 +16,6 @@ class OrganizationLandingPageSerializer(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
     shift = serializers.SerializerMethodField()
 
-    def get_education_language(self, obj):
-        return EducationSerializer(obj.education_language).data
-
     def get_year(self, obj):
         return AcademicYearRetrieveSerializer(obj.year).data
 
@@ -31,8 +28,11 @@ class OrganizationLandingPageSerializer(serializers.ModelSerializer):
     def get_field(self, obj):
         return OrganizationFieldsSerializer(obj.field).data
 
+    def get_education_language(self, obj):
+        return [EducationSerializer(i).data for i in obj.education_language.all()]
+
     def get_shift(self, obj):
-        return ShiftSerializer(obj.shift).data
+        return [ShiftSerializer(i).data for i in obj.shift.all()]
 
     class Meta:
         model = OrganizationLandingPage
