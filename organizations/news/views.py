@@ -14,6 +14,7 @@ class NewsViewSet(viewsets.ModelViewSet):
     queryset = News.objects.filter(deleted=False)
     serializer_class = NewsSerializer
 
+
     def create(self, request, *args, **kwargs):
         # Serializerdan foydalanish
 

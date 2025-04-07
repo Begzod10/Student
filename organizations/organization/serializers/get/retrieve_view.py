@@ -8,7 +8,7 @@ from organizations.organization_type.serializers.get.list import OrganizationTyp
 from students.academic_year.functions.register_academic_year import register_academic_year
 from students.region.serializers.get.retrieve_view import RegionSerializer
 from users.user.serializers.get.retirview import RetrieveUserInfosForRegister
-
+from django.db.models import Min, Max
 
 class OrganizationSerializer(serializers.ModelSerializer):
     region = RegionSerializer()
@@ -98,23 +98,27 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
     def get_landing(self, obj):
         register_academic_year()
-        obj = OrganizationLandingPage.objects.filter(organization=obj).first()
-        if obj:
+
+        landing_qs = OrganizationLandingPage.objects.filter(organization=obj)
+        landing = landing_qs.first()
+        price_stats = landing_qs.aggregate(
+            min_sum=Min('price'),
+            max_sum=Max('price')
+        )
+
+        if landing:
             data = {
-                'id': obj.id,
-                # 'start_date': obj.start_date,
-                # 'expired_date': obj.expire_date,
-                'shift': obj.shift.name,
-                'price': obj.price if obj else None,
-                # 'degree': obj.degree.name,
-                # 'field': obj.field.name if obj.field else None,
-                'requirements': obj.requirements,
-                'language': obj.education_language.name if obj.education_language else None,
-                'grant': obj.grant,
-                # 'desc': obj.desc,
-                # 'desc_json': obj.desc_json
+                'id': landing.id,
+                'shift': [shift.name for shift in landing.shift.all()],
+                'price': landing.price,
+                'price_min': price_stats['min_sum'],
+                'price_max': price_stats['max_sum'],
+                'requirements': landing.requirements,
+                'language': [lang.name for lang in landing.education_language.all()],
+                'grant': landing.grant,
             }
             return data
+        return None
 
     def get_degree(self, obj):
         register_academic_year()

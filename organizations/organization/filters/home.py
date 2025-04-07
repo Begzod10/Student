@@ -15,4 +15,4 @@ class OrganizationLandingPageFilter(filters.FilterSet):
 
     class Meta:
         model = Organization
-        fields = ['organization_type', 'region', 'degree', 'shift', 'price','grant','field']
+        fields = ['organization_type', 'region', 'degree', 'shift', 'price', 'grant', 'field']
