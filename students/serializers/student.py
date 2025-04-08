@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from students.models.student import StudentRequest
+from education.education.serializers.get.retriviev import EducationSerializer
+from students.shift.serializers.get.retriviev import ShiftSerializer
+from organizations.models.organization_landing_page import OrganizationLandingPage
 
 
 class StudentRequestSerializerRetrieve(serializers.ModelSerializer):
@@ -14,8 +17,8 @@ class StudentRequestSerializerRetrieve(serializers.ModelSerializer):
     born_date = serializers.CharField(source="student.user.born_date")
     degree = serializers.CharField(source="degree.name")
     field = serializers.CharField(source="field.name")
-    shift = serializers.CharField(source="shift.name")
-    language = serializers.CharField(source="language.name")
+    shift = serializers.SerializerMethodField()
+    language = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
     organization_name = serializers.SerializerMethodField()
     organization_region = serializers.SerializerMethodField()
@@ -54,14 +57,22 @@ class StudentRequestSerializerRetrieve(serializers.ModelSerializer):
     def get_date(self, obj):
         return obj.date.strftime('%Y-%m-%d') if obj.date else None
 
+    def get_language(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return [EducationSerializer(i).data for i in landig.education_language.all()] if landig else []
+
+    def get_shift(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return [ShiftSerializer(i).data for i in landig.shift.all()] if landig else []
+
 
 class StudentRequestSerializerList(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     phone = serializers.CharField(source="student.user.phone")
     degree = serializers.CharField(source="degree.name")
     field = serializers.CharField(source="field.name")
-    shift = serializers.CharField(source="shift.name")
-    language = serializers.CharField(source="language.name")
+    shift = serializers.SerializerMethodField()
+    language = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
 
     class Meta:
@@ -82,3 +93,11 @@ class StudentRequestSerializerList(serializers.ModelSerializer):
 
     def get_date(self, obj):
         return obj.date.strftime('%Y-%m-%d') if obj.date else None
+
+    def get_language(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return [EducationSerializer(i).data for i in landig.education_language.all()] if landig else []
+
+    def get_shift(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return [ShiftSerializer(i).data for i in landig.shift.all()] if landig else []
