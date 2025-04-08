@@ -30,7 +30,8 @@ class TestBlockSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        instance.questions.all().delete()
+        if len(questions_data) != 0:
+            instance.questions.all().delete()
 
         for question_data in questions_data:
             TestQuestion.objects.create(block=instance, test=instance.test, **question_data)
