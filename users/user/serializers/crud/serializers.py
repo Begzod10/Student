@@ -29,7 +29,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         region = validated_data.pop('region', None)  # ✅ Remove region before creating Users
         role = validated_data.get('role', 'user')
         landing = validated_data.pop('landing', None)
+        exist_phone = Users.objects.filter(phone=validated_data['phone']).exists()
 
+        if exist_phone:
+            return {"phone": "Bu telefon raqamdan foydalanuvchi bor", "status": False}
         user = Users.objects.create(**validated_data)  # ✅ No unexpected keyword arguments now
         user.set_password(password)
         user.save()
@@ -44,9 +47,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             if StudentRequest.objects.filter(
                     student=student,
                     organization=landing_page.organization,
-                    shift=landing_page.shift,
+                    # shift=landing_page.shift,
                     field=landing_page.field,
-                    language=landing_page.education_language,
+                    # language=landing_page.education_language,
                     year=landing_page.year,
                     degree=landing_page.degree,
                     landing_page=landing_page,
@@ -56,9 +59,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             obj = StudentRequest.objects.create(
                 student=student,
                 organization=landing_page.organization,
-                shift=landing_page.shift,
+                # shift=landing_page.shift,
                 field=landing_page.field,
-                language=landing_page.education_language,
+                # language=landing_page.education_language,
                 year=landing_page.year,
                 degree=landing_page.degree,
                 landing_page=landing_page,

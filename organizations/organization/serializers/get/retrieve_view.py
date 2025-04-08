@@ -105,7 +105,6 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             min_sum=Min('price'),
             max_sum=Max('price')
         )
-
         if landing:
             data = {
                 'id': landing.id,

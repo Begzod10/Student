@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
+from education.education.serializers.get.retriviev import EducationSerializer
 from students.models.student import StudentRequest
+from students.shift.serializers.get.retriviev import ShiftSerializer
+from organizations.models.organization_landing_page import OrganizationLandingPage
 
 
 class StudentRequestProfileSerializer(serializers.Serializer):
@@ -9,6 +12,7 @@ class StudentRequestProfileSerializer(serializers.Serializer):
     date = serializers.DateField()
 
     def to_representation(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
         return {
             'id': obj.id,
             'user': {
@@ -19,8 +23,8 @@ class StudentRequestProfileSerializer(serializers.Serializer):
             },
             'request': {
                 'degree': obj.degree.name,
-                'shift': obj.shift.name,
-                'language': obj.language.name
+                'shift': [ShiftSerializer(i).data for i in landig.shift.all()] if landig else [],
+                'language':  [EducationSerializer(i).data for i in landig.education_language.all()] if landig else [],
             },
             'passport': {
                 'seria': obj.student.user.passport_seria,
@@ -37,7 +41,7 @@ class StudentRequestProfileSerializer(serializers.Serializer):
                 'organization_type': obj.organization.organization_type.name,
                 'region': obj.organization.region.name
             },
-            'language': obj.language.name,
+            'language': [EducationSerializer(i).data for i in landig.education_language.all()] if landig else [],
             'date': obj.date,
             'request_status': {
                 "cancel": obj.canceled,
@@ -57,8 +61,8 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     phone = serializers.CharField(source='student.user.phone')
     degree = serializers.CharField(source='degree.name')
-    shift = serializers.CharField(source='shift.name')
-    language = serializers.CharField(source='language.name')
+    shift = serializers.SerializerMethodField()
+    language = serializers.SerializerMethodField()
     field = serializers.CharField(source='field.name')
     image = serializers.SerializerMethodField()
     region = serializers.SerializerMethodField()
@@ -70,7 +74,16 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentRequest
         fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date', 'accepted', 'field', 'image', 'region',
-                  'price','student_id']
+                  'price', 'student_id']
+
+    def get_language(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return [EducationSerializer(i).data for i in landig.education_language.all()] if landig else []
+
+    def get_shift(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return [ShiftSerializer(i).data for i in landig.shift.all()] if landig else []
+
 
     def get_name(self, obj):
         name_parts = []
@@ -83,6 +96,7 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
             name_parts.append(obj.student.user.last_name)
 
         return ' '.join(name_parts)
+
 
     def get_image(self, obj):
         return obj.student.user.image if obj.student.user.image else None
