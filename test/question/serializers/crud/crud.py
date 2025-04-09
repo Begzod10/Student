@@ -7,4 +7,5 @@ class TestQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestQuestion
+
         fields = ['id', 'block', 'test', 'isTrue', 'answer', 'to_json','image']

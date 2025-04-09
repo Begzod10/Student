@@ -4,7 +4,7 @@ from test.models.test_question import TestQuestion
 from test.models.test_block import TestBlock
 
 
-class TestQuestionSerializer(serializers.ModelSerializer):
+class TestQuestionSerializers(serializers.ModelSerializer):
     class Meta:
         model = TestQuestion
         fields = ['id', 'block', 'test', 'isTrue', 'answer', 'to_json', 'image']
@@ -13,7 +13,7 @@ class TestQuestionSerializer(serializers.ModelSerializer):
 
 class TestBlockSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False, allow_null=True)
-    questions = TestQuestionSerializer(many=True, required=False)
+    questions = TestQuestionSerializers(many=True, required=False)
 
     class Meta:
         model = TestBlock
@@ -29,6 +29,9 @@ class TestBlockSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+
+        if len(questions_data) != 0:
+            instance.questions.all().delete()
 
         for question_data in questions_data:
             TestQuestion.objects.create(block=instance, test=instance.test, **question_data)
