@@ -1,3 +1,5 @@
+import pprint
+
 from rest_framework import serializers
 from test.models.models import Test
 from test.models.test_question import TestQuestion
@@ -35,6 +37,7 @@ class TestUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
 
     def update(self, instance, validated_data):
+        pprint.pprint(validated_data)
         blocks_data = validated_data.pop('blocks', [])
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])

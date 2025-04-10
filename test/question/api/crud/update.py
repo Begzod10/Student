@@ -14,4 +14,5 @@ class TestQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         question = self.get_object()
         question.image = request.FILES.get('image', question.image)
         question.save()
-        return Response({"message": "Image updated successfully!", "image_url": question.image.url})
+        return Response(
+            {"message": "Image updated successfully!", "image_url": question.image.url if question.image else None})
