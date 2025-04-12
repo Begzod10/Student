@@ -1,6 +1,7 @@
 from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,8 +17,13 @@ from organizations.organization.serializers.get.retrieve_view import Organizatio
 class HomeOrganizationView(generics.ListAPIView):
     queryset = Organization.objects.filter(deleted=False).distinct()
     serializer_class = OrganizationHomeSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = OrganizationLandingPageFilter
+    search_fields = [
+        'name',
+        '^name',
+        '=name',
+    ]
 
 
 class HomeOrganizationRetrieveDescView(generics.RetrieveAPIView):

@@ -7,7 +7,7 @@ from students.models.student import Shift
 
 
 class OrganizationLandingPage(models.Model):
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE)
+    organization = models.ForeignKey("Organization",related_name='organizationlandingpage', on_delete=models.CASCADE)
     year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE, null=True)
     desc = models.TextField()
     expire_date = models.DateField()
