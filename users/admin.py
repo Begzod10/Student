@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Users
+from .models import Users, Comments
 
 
 class UsersAdmin(UserAdmin):
@@ -12,7 +12,7 @@ class UsersAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': (
-        'email', 'phone', 'username', 'name', 'surname', 'last_name', 'sex', 'born_date', 'born_address', 'role')}),
+            'email', 'phone', 'username', 'name', 'surname', 'last_name', 'sex', 'born_date', 'born_address', 'role')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
         ('Additional Info',
@@ -26,6 +26,11 @@ class UsersAdmin(UserAdmin):
     )
 
     ordering = ('email',)
+
+
+class CommentsAdmin(admin.ModelAdmin):
+    model = Comments
+    list_display = ['user', 'comment', 'created_at', 'rating', 'organization', 'name', 'surname']
 
 
 # Register your models here.

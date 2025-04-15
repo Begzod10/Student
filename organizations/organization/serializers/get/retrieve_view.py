@@ -30,7 +30,14 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'grand_text',
             "grand_json",
             'inn',
-            'request_count'
+            'request_count',
+            'instagram_link',
+            'facebook_link',
+            'telegram_link',
+            'youtube_link',
+            'website_link',
+            'address',
+            'email'
         ]
 
     def get_request_count(self, obj):

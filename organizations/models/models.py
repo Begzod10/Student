@@ -35,6 +35,13 @@ class Organization(models.Model):
     grand_text = models.TextField(null=True, blank=True)
     grand_json = models.JSONField(null=True, blank=True)
     inn = models.CharField(max_length=250, null=True)
+    instagram_link = models.CharField(max_length=250, null=True)
+    facebook_link = models.CharField(max_length=250, null=True)
+    telegram_link = models.CharField(max_length=250, null=True)
+    youtube_link = models.CharField(max_length=250, null=True)
+    website_link = models.CharField(max_length=250, null=True)
+    address = models.CharField(max_length=250, null=True)
+    email = models.CharField(max_length=250, null=True)
 
     class Meta:
         app_label = 'organizations'

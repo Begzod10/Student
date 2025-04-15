@@ -62,3 +62,16 @@ def sync_phone_username(sender, instance, **kwargs):
         raise ValidationError("This phone number is already in use. Please use a different phone number.")
     if Users.objects.filter(username=instance.username).exclude(id=instance.id).exists():
         raise ValidationError("This username is already taken. Please choose another one.")
+
+
+class Comments(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    rating = models.IntegerField(null=True, blank=True)
+    organization = models.ForeignKey('organizations.Organization', on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
+    surname = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        app_label = 'users'
