@@ -19,19 +19,12 @@ class StudentRequestFilter(django_filters.FilterSet):
 
     def filter_status(self, queryset, name, value):
 
-        if value == 'rejectedRequest':
-            return queryset.filter(request_status='rejectedRequest')
+        if value != 'allRequest' and value != 'newRequest':
+            return queryset.filter(request_status=value)
         elif value == 'allRequest':
             return queryset  # Returning the full queryset is valid
-        elif value == 'acceptedRequest':
-            return queryset.filter(request_status='acceptedRequest')
-        elif value == 'returnRequest':
-            return queryset.filter(request_status='returnRequest')
-        elif value == 'invitedRequest':
-            return queryset.filter(request_status='invitedRequest')
         elif value == 'newRequest':
             return queryset.filter(
-                canceled=False, accepted=False, back_recovery=False, called_to_exam=False
+                request_status=''
             )
-
         return queryset.none()

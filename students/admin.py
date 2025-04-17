@@ -31,8 +31,8 @@ class StudentAdmin(admin.ModelAdmin):
 @admin.register(StudentRequest)
 class StudentRequestAdmin(admin.ModelAdmin):
     list_display = (
-        'student', 'organization', 'shift', 'field', 'language', 'year', 'degree', 'landing_page', 'accepted')
-    list_filter = ('organization', 'shift', 'language', 'year', 'degree', 'accepted', 'date')
+        'student', 'organization', 'shift', 'field', 'language', 'year', 'degree', 'landing_page')
+    list_filter = ('organization', 'shift', 'language', 'year', 'degree', 'date')
     search_fields = ('student__user__username', 'organization__name')
     date_hierarchy = 'date'
 

@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from test.models.models import Test
 from test.test.serializers.crud.crud import TestCreateSerializer
 from test.test.serializers.get.get import TestRetrieveSerializer
+from test.models.subject import Subject
 
 
 class TestCreateView(generics.CreateAPIView):

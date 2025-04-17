@@ -36,22 +36,14 @@ class StudentRequestRetrieveView(generics.RetrieveAPIView):
 @api_view(['GET'])
 def student_request_dashboard(request):
     stats = StudentRequest.objects.aggregate(
-        accepted_count=Count('id', filter=Q(accepted=True)),
-        back_recovery_count=Count('id', filter=Q(back_recovery=True)),
-        canceled_count=Count('id', filter=Q(canceled=True)),
+        accepted_count=Count('id', filter=Q(request_status='acceptedRequest')),
+        back_recovery_count=Count('id', filter=Q(request_status='backRecovery')),
+        canceled_count=Count('id', filter=Q(request_status='canceledRequest')),
         total_requests_count=Count('id'),
         new_requests_count=Count(
             'id',
             filter=Q(
-                accepted=False,
-                canceled=False,
-                back_recovery=False,
-                called_to_exam=False,
-                present_in_exam=False,
-                evaluated=False,
-                contract_given=False,
-                payed_status=False,
-                accepted_to_study=False
+                request_status='',
             )
         )
     )

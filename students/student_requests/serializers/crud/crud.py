@@ -19,9 +19,7 @@ class StudentRequestCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentRequest
-        fields = ['id', 'student', 'organization', 'shift', 'field', 'language', 'year', 'accepted', 'canceled',
-                  'back_recovery', 'back_recovery', 'present_in_exam', 'evaluated', 'contract_given', 'payed_status',
-                  'accepted_to_study', 'degree']
+        fields = ['id', 'student', 'organization', 'shift', 'field', 'language', 'year', 'request_status', 'degree']
 
 
 class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
@@ -43,7 +41,7 @@ class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
                 student=student,
                 # organization=landing_page.organization,
                 # shift=landing_page.shift,
-                # field=landing_page.field,
+                field=landing_page.field,
                 # language=landing_page.education_language,
                 # year=landing_page.year,
                 # degree=landing_page.degree,
@@ -54,9 +52,9 @@ class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
         obj = StudentRequest.objects.create(
             student=student,
             organization=landing_page.organization,
-            shift=landing_page.shift,
+            # shift=landing_page.shift,
             field=landing_page.field,
-            language=landing_page.education_language,
+            # language=landing_page.education_language,
             year=landing_page.year,
             degree=landing_page.degree,
             landing_page=landing_page,
