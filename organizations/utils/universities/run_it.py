@@ -15,9 +15,9 @@ types = [
     {
         'name': "Universitet"
     },
-    {
-        'name': "Kollej"
-    },
+    # {
+    #     'name': "Kollej"
+    # },
     {
         "name": "Texnikum"
     },
