@@ -17,7 +17,7 @@ class OrganizationFieldsListView(generics.ListAPIView):
         pk = self.kwargs.get('pk')
         if pk is None:
             raise KeyError("'pk' not found in URL kwargs.")
-        return OrganizationFields.objects.filter(organization_type_id=pk, deleted=False).all().order_by('id')
+        return OrganizationFields.objects.filter(organization_type_id=pk, deleted=False).all().order_by('name')
 
 
 class OrganizationFields2ListView(APIView):
