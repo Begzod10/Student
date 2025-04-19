@@ -8,4 +8,4 @@ class OrganizationFieldsListSerializersUpdate(serializers.ModelSerializer):
 
     class Meta:
         model = OrganizationFields
-        fields = ['id', 'name', 'description']
+        fields = ['id', 'name', 'description','organization_type']

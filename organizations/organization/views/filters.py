@@ -36,7 +36,7 @@ def organizations_filter(request, pk):
         languages = []
         for organization in organizations:
             # Use the correct field 'organization_id' instead of 'organization'
-            landing_pages = OrganizationLandingPage.objects.filter(organization_id=organization.id)
+            landing_pages = OrganizationLandingPage.objects.filter(organization_id=organization.id,deleted=False)
             for landing_page in landing_pages:
                 if landing_page.education_language:
                     languages.append({

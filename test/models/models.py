@@ -8,3 +8,4 @@ class Test(models.Model):
     field = models.ForeignKey(OrganizationFields, on_delete=models.CASCADE, related_name='blocks', null=True, blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
     duration = models.BigIntegerField(null=True, blank=True)
+    is_mandatory = models.BooleanField(null=True, blank=True)

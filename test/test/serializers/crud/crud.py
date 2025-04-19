@@ -12,7 +12,7 @@ class TestCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
+        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks','is_mandatory']
 
     def create(self, validated_data):
         blocks_data = validated_data.pop('blocks', [])
@@ -34,7 +34,7 @@ class TestUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks']
+        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks','is_mandatory']
 
     def update(self, instance, validated_data):
         pprint.pprint(validated_data)

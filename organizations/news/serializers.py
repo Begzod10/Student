@@ -29,7 +29,7 @@ class NewsSerializer(serializers.ModelSerializer):
         if self.context.get('view') and self.context['view'].action == 'retrieve':
             try:
                 org = obj.organization
-                org_landing = OrganizationLandingPage.objects.filter(organization=org).order_by('-start_date').all()
+                org_landing = OrganizationLandingPage.objects.filter(organization=org,deleted=False).order_by('-start_date').all()
                 if org_landing:
 
                     for org_landing in org_landing:

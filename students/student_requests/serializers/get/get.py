@@ -124,8 +124,8 @@ class StudentRequestProfileSerializers(serializers.ModelSerializer):
         model = StudentRequest
         fields = [
             'id', 'degree', 'language', 'shift', 'location', 'name',
-            'price', 'region', 'accepted', 'canceled', 'back_recovery',
-            'called_to_exam', 'present_in_exam', 'evaluated',
-            'contract_given', 'payed_status', 'accepted_to_study',
+            'price', 'region',
+
+
             'request_status', 'date'
         ]

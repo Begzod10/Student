@@ -16,4 +16,4 @@ class OrganizationLandingPageList(generics.ListAPIView):
         degree_id = self.request.query_params.get('degree_id', None)
 
         return OrganizationLandingPage.objects.filter(organization_id=organization_id, year_id=year_id,
-                                                      degree_id=degree_id)
+                                                      degree_id=degree_id,deleted=False)

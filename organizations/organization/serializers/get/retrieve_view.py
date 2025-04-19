@@ -1,14 +1,13 @@
+from django.db.models import Min, Max
 from rest_framework import serializers
 
 from organizations.models.models import Organization
-from organizations.models.organization_user import OrganizationUser
 from organizations.models.models import OrganizationGallery
 from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
 from organizations.organization_type.serializers.get.list import OrganizationTypeSerializerList
 from students.academic_year.functions.register_academic_year import register_academic_year
 from students.region.serializers.get.retrieve_view import RegionSerializer
-from users.user.serializers.get.retirview import RetrieveUserInfosForRegister
-from django.db.models import Min, Max
+
 
 class OrganizationSerializer(serializers.ModelSerializer):
     region = RegionSerializer()
@@ -106,7 +105,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
     def get_landing(self, obj):
         register_academic_year()
 
-        landing_qs = OrganizationLandingPage.objects.filter(organization=obj)
+        landing_qs = OrganizationLandingPage.objects.filter(organization=obj, deleted=False)
         landing = landing_qs.first()
         price_stats = landing_qs.aggregate(
             min_sum=Min('price'),
@@ -128,7 +127,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
     def get_degree(self, obj):
         register_academic_year()
-        obj = OrganizationLandingPage.objects.filter(organization=obj).distinct()
+        obj = OrganizationLandingPage.objects.filter(organization=obj, deleted=False).distinct()
         data_dict = {}
 
         for i in obj:
