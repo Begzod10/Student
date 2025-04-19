@@ -3,7 +3,7 @@ from django.db import models
 
 class OrganizationFields(models.Model):
     name = models.CharField(max_length=250, null=True)
-    desc = models.TextField()
+    desc = models.TextField(null=True, blank=True)
     admin_status = models.BooleanField(default=False)
     organization_type = models.ForeignKey('organizations.OrganizationType', on_delete=models.SET_NULL, null=True)
     deleted = models.BooleanField(default=False)
