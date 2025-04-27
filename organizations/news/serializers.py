@@ -26,29 +26,29 @@ class NewsSerializer(serializers.ModelSerializer):
     def get_landing(self, obj):
         extra_details = []
 
-        if self.context.get('view') and self.context['view'].action == 'retrieve':
+        view = self.context.get('view')
+        if view and hasattr(view, 'action') and view.action == 'retrieve':  # <- safer
             try:
                 org = obj.organization
-                org_landing = OrganizationLandingPage.objects.filter(organization=org,deleted=False).order_by('-start_date').all()
+                org_landing = OrganizationLandingPage.objects.filter(
+                    organization=org, deleted=False
+                ).order_by('-start_date').all()
                 if org_landing:
-
-                    for org_landing in org_landing:
+                    for landing in org_landing:
                         extra_details.append({
-                            'id': org_landing.id,
-                            'start_date': org_landing.start_date,
-                            'expired_date': org_landing.expire_date,
-                            'shift': org_landing.shift.name,
-                            'price': org_landing.price if org_landing else None,
-                            'degree': org_landing.degree.name,
-                            'field': org_landing.field.name if org_landing.field else None,
-                            'requirements': org_landing.requirements,
-                            'language': org_landing.education_language.name if org_landing.education_language else None,
-                            'grant': org_landing.grant,
-                            'desc': org_landing.desc,
-                            'desc_json': org_landing.desc_json
+                            'id': landing.id,
+                            'start_date': landing.start_date,
+                            'expired_date': landing.expire_date,
+                            'shift': landing.shift.name,
+                            'price': landing.price if landing else None,
+                            'degree': landing.degree.name,
+                            'field': landing.field.name if landing.field else None,
+                            'requirements': landing.requirements,
+                            'language': landing.education_language.name if landing.education_language else None,
+                            'grant': landing.grant,
+                            'desc': landing.desc,
+                            'desc_json': landing.desc_json
                         })
-                        ''
-
             except (AttributeError, OrganizationLandingPage.DoesNotExist):
                 pass
         return extra_details

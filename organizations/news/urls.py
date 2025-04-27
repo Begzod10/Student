@@ -9,5 +9,5 @@ router.register(r'news', NewsViewSet, basename='news')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('organization/<pk>/', NewsViewOrganizationList.as_view(), name='news-organization'),
+    path('news_list/', NewsViewOrganizationList.as_view(), name='news-organization'),
 ]

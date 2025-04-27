@@ -1,4 +1,4 @@
-from students.models.region import Region
+from students.models.region import Region, District
 from rest_framework import serializers
 
 
@@ -11,3 +11,10 @@ class RegionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         region, created = Region.objects.get_or_create(**validated_data)
         return region
+
+
+class DistrictSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = District
+        fields = ['id', 'name']
+        depth = 1

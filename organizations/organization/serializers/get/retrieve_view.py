@@ -6,11 +6,12 @@ from organizations.models.models import OrganizationGallery
 from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
 from organizations.organization_type.serializers.get.list import OrganizationTypeSerializerList
 from students.academic_year.functions.register_academic_year import register_academic_year
-from students.region.serializers.get.retrieve_view import RegionSerializer
+from students.region.serializers.get.retrieve_view import RegionSerializer, DistrictSerializer
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
     region = RegionSerializer()
+    district = DistrictSerializer()
     organization_type = OrganizationTypeSerializerList()
     request_count = serializers.SerializerMethodField()
 
@@ -36,7 +37,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'youtube_link',
             'website_link',
             'address',
-            'email'
+            'email',
+            'district'
         ]
 
     def get_request_count(self, obj):
@@ -95,6 +97,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             # 'phone',
             'img',
             'organization_type',
+            'rating',
             # 'organization_type_id',
             # 'region',
             # 'advantages',
@@ -167,7 +170,8 @@ class OrganizationDescSerializer(serializers.ModelSerializer):
             'grand_text',
             'grand_json',
             'inn',
-            'img'
+            'img',
+            'name',
         ]
 
 

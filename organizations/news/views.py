@@ -14,13 +14,13 @@ class NewsViewSet(viewsets.ModelViewSet):
     queryset = News.objects.filter(deleted=False)
     serializer_class = NewsSerializer
 
-
     def create(self, request, *args, **kwargs):
         # Serializerdan foydalanish
-
+        pprint(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -48,7 +48,10 @@ class NewsViewSet(viewsets.ModelViewSet):
 
 class NewsViewOrganizationList(ListAPIView):
     serializer_class = NewsSerializer
+    queryset = News.objects.all()  # <--- ADD THIS
 
     def get_queryset(self):
-        organization_id = self.kwargs['organization_id']
-        return News.objects.filter(organization=organization_id, deleted=False)
+        organization_id = self.request.query_params.get('organization_id')
+        if organization_id:
+            return self.queryset.filter(organization_id=organization_id, deleted=False)
+        return self.queryset.none()

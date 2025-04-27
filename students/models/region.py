@@ -36,12 +36,24 @@ provinces_data = [
 
 class Region(models.Model):
     name = models.CharField(max_length=255)
+    name_ru = models.CharField(max_length=255, null=True)
+    name_en = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
         app_label = 'students'
+
+
+class District(models.Model):
+    name = models.CharField(max_length=255)
+    name_ru = models.CharField(max_length=255)
+    name_en = models.CharField(max_length=255)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 @receiver(post_migrate)

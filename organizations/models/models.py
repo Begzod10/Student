@@ -42,6 +42,8 @@ class Organization(models.Model):
     website_link = models.CharField(max_length=250, null=True)
     address = models.CharField(max_length=250, null=True)
     email = models.CharField(max_length=250, null=True)
+    rating = models.IntegerField(null=True, default=0)
+    district = models.ForeignKey('students.District', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         app_label = 'organizations'

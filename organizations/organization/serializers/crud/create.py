@@ -3,8 +3,6 @@ from organizations.models.models import Organization
 
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Organization
         fields = [
@@ -23,5 +21,6 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
             'youtube_link',
             'website_link',
             'address',
-            'email'
+            'email',
+            'district'
         ]
