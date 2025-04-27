@@ -1,9 +1,12 @@
 from rest_framework import generics, status
+from rest_framework import viewsets
 from rest_framework.response import Response
+
+from test.models.models import StudentTest
 from test.models.models import Test
+from test.test.serializers.crud.crud import StudentTestSerializer
 from test.test.serializers.crud.crud import TestCreateSerializer
 from test.test.serializers.get.get import TestRetrieveSerializer
-from test.models.subject import Subject
 
 
 class TestCreateView(generics.CreateAPIView):
@@ -14,3 +17,8 @@ class TestCreateView(generics.CreateAPIView):
         response = super().create(request, *args, **kwargs)
         instance = self.get_queryset().get(id=response.data['id'])
         return Response(TestRetrieveSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+
+class StudentTestViewSet(viewsets.ModelViewSet):
+    queryset = StudentTest.objects.all()
+    serializer_class = StudentTestSerializer
