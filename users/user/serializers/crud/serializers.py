@@ -39,12 +39,25 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         if role == 'user' and region:  # ✅ Ensure region is not None
             Student.objects.create(user=user, region=region)  # ✅ Assign region to Student
+        if user.passport_seria and user.passport_number and user.passport_pdf1 and user.passport_pdf2:
+            if landing:
+                landing_page = get_object_or_404(OrganizationLandingPage, id=landing)
+                student = get_object_or_404(Student, user=user)
 
-        if landing:
-            landing_page = get_object_or_404(OrganizationLandingPage, id=landing)
-            student = get_object_or_404(Student, user=user)
+                if StudentRequest.objects.filter(
+                        student=student,
+                        organization=landing_page.organization,
+                        # shift=landing_page.shift,
+                        field=landing_page.field,
+                        # language=landing_page.education_language,
+                        year=landing_page.year,
+                        degree=landing_page.degree,
+                        landing_page=landing_page,
+                ).exists():
+                    raise serializers.ValidationError(
+                        {"detail": "Siz allaqachon bu yo'nalishdan ro'yhatdan o'tgansiz!"})
 
-            if StudentRequest.objects.filter(
+                obj = StudentRequest.objects.create(
                     student=student,
                     organization=landing_page.organization,
                     # shift=landing_page.shift,
@@ -53,21 +66,11 @@ class RegisterSerializer(serializers.ModelSerializer):
                     year=landing_page.year,
                     degree=landing_page.degree,
                     landing_page=landing_page,
-            ).exists():
-                raise serializers.ValidationError({"detail": "Siz allaqachon bu yo'nalishdan ro'yhatdan o'tgansiz!"})
+                )
 
-            obj = StudentRequest.objects.create(
-                student=student,
-                organization=landing_page.organization,
-                # shift=landing_page.shift,
-                field=landing_page.field,
-                # language=landing_page.education_language,
-                year=landing_page.year,
-                degree=landing_page.degree,
-                landing_page=landing_page,
-            )
-
-            return {"detail": "Arizangiz topshirildi!"}
+                return {"detail": "Arizangiz topshirildi!"}
+        else:
+            return {"detail": "Profil malumotlari yetarli emas!", "status": False}
 
         return user
 

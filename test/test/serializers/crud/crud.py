@@ -78,8 +78,8 @@ class StudentTestSerializer(serializers.ModelSerializer):
                 'question_count': 30
             },
             {
-                'id': obj.test2.subject.id,
-                'name': obj.test2.subject.name,
+                'id': obj.test2.subject.id if obj.test2.subject else None,
+                'name': obj.test2.subject.name if obj.test2.subject else None,
                 'question_count': 30
 
             }

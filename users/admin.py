@@ -35,3 +35,4 @@ class CommentsAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(Users, UsersAdmin)
+admin.site.register(Comments, CommentsAdmin)
