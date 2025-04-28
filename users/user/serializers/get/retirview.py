@@ -22,4 +22,6 @@ class RetrieveUserInfosForRegister(serializers.ModelSerializer):
         model = Users
         fields = ['id', 'name', 'surname', 'passport_seria', 'sex', 'born_date', 'born_address', 'indefikatsiya_pin',
                   'phone', "organization_id", "organization_name",
+                  'passport_number', 'passport_pdf1', 'passport_pdf2',
+                  'certificate', 'image',
                   'phone_extra', 'email', 'role', "organization_user"]

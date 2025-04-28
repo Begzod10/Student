@@ -7,6 +7,7 @@ from organizations.models.organization_fields import OrganizationFields
 from organizations.models.organization_landing_page import OrganizationLandingPage
 from students.models.academic_year import AcademicYear
 from students.models.student import StudentRequest, Student, Shift
+from rest_framework.response import Response
 
 
 class StudentRequestCreateUpdateSerializer(serializers.ModelSerializer):
@@ -37,27 +38,13 @@ class StudentRequestCreateUpdateSerializer2(serializers.ModelSerializer):
         landing_page = get_object_or_404(OrganizationLandingPage, id=landing_id)
         student = get_object_or_404(Student, user=user_id)
 
-        if StudentRequest.objects.filter(
-                student=student,
-                # organization=landing_page.organization,
-                # shift=landing_page.shift,
-                field=landing_page.field,
-                # language=landing_page.education_language,
-                # year=landing_page.year,
-                # degree=landing_page.degree,
-                landing_page=landing_page,
-        ).exists():
-            raise serializers.ValidationError({"detail": "Siz allaqachon bu yo'nalishdan ro'yhatdan o'tgansiz!"})
-
         obj = StudentRequest.objects.create(
             student=student,
             organization=landing_page.organization,
-            # shift=landing_page.shift,
             field=landing_page.field,
-            # language=landing_page.education_language,
             year=landing_page.year,
             degree=landing_page.degree,
             landing_page=landing_page,
         )
+        return obj
 
-        return {"detail": "Arizangiz topshirildi!"}

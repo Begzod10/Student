@@ -30,9 +30,11 @@ class Users(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     phone_extra = models.CharField(max_length=255, null=True)
     passport_seria = models.CharField(max_length=255, null=True)
+    passport_number = models.CharField(max_length=255, null=True)
     file = models.ForeignKey('organizations.File', on_delete=models.SET_NULL, null=True)
     USERNAME_FIELD = 'phone'
     image = models.ImageField(upload_to='users/', null=True, blank=True)
+    certificate = models.ImageField(upload_to='certificate/', null=True, blank=True)
     groups = models.ManyToManyField(
         Group,
         related_name="customuser_groups",

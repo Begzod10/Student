@@ -22,6 +22,23 @@ class StudentRequestSerializerRetrieve(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     organization_name = serializers.SerializerMethodField()
     organization_region = serializers.SerializerMethodField()
+    passport_number = serializers.CharField(source="student.user.passport_number")
+    passport_pdf1 = serializers.SerializerMethodField()
+    passport_pdf2 = serializers.SerializerMethodField()
+    certificate = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
+    def get_passport_pdf1(self, obj):
+        return obj.student.user.passport_pdf1.url if obj.student.user.passport_pdf1 else None
+
+    def get_passport_pdf2(self, obj):
+        return obj.student.user.passport_pdf2.url if obj.student.user.passport_pdf2 else None
+
+    def get_certificate(self, obj):
+        return obj.student.user.certificate.url if obj.student.user.certificate else None
+
+    def get_image(self, obj):
+        return obj.student.user.image.url if obj.student.user.image else None
 
     class Meta:
         model = StudentRequest
@@ -43,6 +60,12 @@ class StudentRequestSerializerRetrieve(serializers.ModelSerializer):
             'date',
             'organization_name',
             'organization_region',
+            'passport_number',
+            'passport_pdf1',
+            'passport_pdf2',
+            'passport_seria',
+            'certificate',
+            'image'
         ]
 
     def get_name(self, object):
