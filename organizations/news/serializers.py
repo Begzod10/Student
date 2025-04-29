@@ -2,7 +2,7 @@ import re
 
 from rest_framework import serializers
 
-from ..models.news import News, NewsView
+from ..models.news import News, NewsView, NewsBlock
 from ..models.organization_landing_page import OrganizationLandingPage
 
 
@@ -11,10 +11,11 @@ class NewsSerializer(serializers.ModelSerializer):
     shared = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField(allow_null=True, required=False, read_only=True)
     visitor_id = serializers.SerializerMethodField()
+    desc_json = serializers.SerializerMethodField()
 
     class Meta:
         model = News
-        fields = ['id', 'title', 'desc_json', 'img', 'date', 'deleted', 'views_display', 'shared', 'landing',
+        fields = ['id', 'title', 'deleted', 'views_display', 'shared', 'landing', 'desc_json',
                   'visitor_id', 'organization']
 
     def get_views_display(self, obj):
@@ -22,6 +23,9 @@ class NewsSerializer(serializers.ModelSerializer):
         if view_count >= 1000:
             return f"{view_count / 1000:.1f}K views"
         return f"{view_count} views"
+
+    def get_desc_json(self, obj):
+        return obj.news_block[0].desc_json if obj.news_block else None
 
     def get_landing(self, obj):
         extra_details = []
@@ -58,8 +62,8 @@ class NewsSerializer(serializers.ModelSerializer):
         news_url = f"{base_url}news/{obj.id}"
 
         desc_text = ""
-        if obj.desc_json and 'text' in obj.desc_json:
-            full_text = obj.desc_json['text']
+        if obj.news_block[0].desc_json and 'text' in obj.news_block[0].desc_json:
+            full_text = obj.news_block[0].desc_json['text']
             clean_text = re.sub(r'<[^>]+>', '', full_text)
             period_index = clean_text.find('.')
             desc_text = clean_text[:period_index + 1] if period_index != -1 else clean_text
@@ -76,3 +80,24 @@ class NewsSerializer(serializers.ModelSerializer):
     def get_visitor_id(self, obj):
         # Requestdan visitor_id ni olish
         return self.context.get('visitor_id')
+
+
+class NewsBlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsBlock
+        fields = ['id', 'desc_json', 'img', 'news']
+
+    def create(self, validated_data):
+        last_block = NewsBlock.objects.filter(news=validated_data['news']).order_by('-index').first()
+        if last_block:
+            validated_data['index'] = last_block.index + 1
+        return NewsBlock.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+    def destroy(self, instance):
+        instance.delete()
