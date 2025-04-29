@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from students.models.region import Region, District
 from students.region.regions import provinces_data, districts_data
 

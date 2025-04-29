@@ -38,6 +38,7 @@ class Region(models.Model):
     name = models.CharField(max_length=255)
     name_ru = models.CharField(max_length=255, null=True)
     name_en = models.CharField(max_length=255, null=True)
+    name_oz = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.name
