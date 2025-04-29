@@ -8,7 +8,7 @@ from students.region.serializers.crud.crud import create_regions
 class RegionListView(generics.ListAPIView):
     queryset = Region.objects.all()
     serializer_class = RegionSerializer
-    # create_regions()
+    create_regions()
 
 
 class DistrictListView(generics.ListAPIView):
