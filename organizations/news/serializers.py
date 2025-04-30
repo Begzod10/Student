@@ -6,17 +6,25 @@ from ..models.news import News, NewsView, NewsBlock
 from ..models.organization_landing_page import OrganizationLandingPage
 
 
+class NewsShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ['id', 'title', 'img', 'date']  # include only lightweight fields
+
+
 class NewsSerializer(serializers.ModelSerializer):
     views_display = serializers.SerializerMethodField()
     shared = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField(allow_null=True, required=False, read_only=True)
     visitor_id = serializers.SerializerMethodField()
     desc_json = serializers.SerializerMethodField()
+    blocks = serializers.SerializerMethodField()
+    other_news = serializers.SerializerMethodField()
 
     class Meta:
         model = News
         fields = ['id', 'title', 'deleted', 'views_display', 'shared', 'landing', 'desc_json',
-                  'visitor_id', 'organization']
+                  'visitor_id', 'organization', 'img', 'date', 'blocks', 'other_news']
 
     def get_views_display(self, obj):
         view_count = NewsView.objects.filter(news=obj).count()
@@ -24,8 +32,16 @@ class NewsSerializer(serializers.ModelSerializer):
             return f"{view_count / 1000:.1f}K views"
         return f"{view_count} views"
 
+    def get_other_news(self, obj):
+
+        return NewsShortSerializer(News.objects.exclude(id=obj.id)[:5], many=True).data
+
+    def get_blocks(self, obj):
+        return NewsBlockSerializer(obj.news_blocks.all().order_by('index'), many=True).data
+
     def get_desc_json(self, obj):
-        return obj.news_block[0].desc_json if obj.news_block else None
+        news_blocks = obj.news_blocks.all().order_by('index')
+        return news_blocks[0].desc_json if news_blocks else None
 
     def get_landing(self, obj):
         extra_details = []
@@ -62,8 +78,9 @@ class NewsSerializer(serializers.ModelSerializer):
         news_url = f"{base_url}news/{obj.id}"
 
         desc_text = ""
-        if obj.news_block[0].desc_json and 'text' in obj.news_block[0].desc_json:
-            full_text = obj.news_block[0].desc_json['text']
+        news_blocks = obj.news_blocks.all().order_by('index')
+        if news_blocks and news_blocks[0].desc_json and 'text' in news_blocks[0].desc_json:
+            full_text = news_blocks[0].desc_json['text']
             clean_text = re.sub(r'<[^>]+>', '', full_text)
             period_index = clean_text.find('.')
             desc_text = clean_text[:period_index + 1] if period_index != -1 else clean_text
