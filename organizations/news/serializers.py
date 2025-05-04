@@ -1,3 +1,4 @@
+import pprint
 import re
 
 from rest_framework import serializers
@@ -100,6 +101,9 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class NewsBlockSerializer(serializers.ModelSerializer):
+    img = serializers.ImageField(required=False, allow_null=True)
+    desc_json = serializers.JSONField(required=False, allow_null=True)
+
     class Meta:
         model = NewsBlock
         fields = ['id', 'desc_json', 'img', 'news']
@@ -108,6 +112,8 @@ class NewsBlockSerializer(serializers.ModelSerializer):
         last_block = NewsBlock.objects.filter(news=validated_data['news']).order_by('-index').first()
         if last_block:
             validated_data['index'] = last_block.index + 1
+        else:
+            validated_data['index'] = 0
         return NewsBlock.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
