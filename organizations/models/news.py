@@ -22,4 +22,4 @@ class NewsBlock(models.Model):
     img = models.FileField(upload_to='news/', null=True, blank=True)
     news = models.ForeignKey(News, on_delete=models.SET_NULL, null=True, related_name='news_blocks')
     index = models.IntegerField(null=True)
-
+    type_block = models.CharField(max_length=250, null=True)
