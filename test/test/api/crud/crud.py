@@ -18,3 +18,8 @@ class TestCreateView(generics.CreateAPIView):
 class TestUpdateView(generics.UpdateAPIView):
     queryset = Test.objects.all()
     serializer_class = TestUpdateSerializer
+
+
+class TestDeleteView(generics.DestroyAPIView):
+    queryset = Test.objects.all()
+    serializer_class = TestRetrieveSerializer
