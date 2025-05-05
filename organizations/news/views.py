@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
-from .serializers import NewsSerializer
-from ..models.news import News, NewsView
+from .serializers import NewsSerializer, NewsBlockSerializer
+from ..models.news import News, NewsView, NewsBlock
 from pprint import pprint
 from django.utils.crypto import get_random_string
 
@@ -55,3 +55,11 @@ class NewsViewOrganizationList(ListAPIView):
         if organization_id:
             return self.queryset.filter(organization_id=organization_id, deleted=False)
         return self.queryset.none()
+
+
+class NewsBlockViewSet(viewsets.ModelViewSet):
+    queryset = NewsBlock.objects.all()
+    serializer_class = NewsBlockSerializer
+
+
+

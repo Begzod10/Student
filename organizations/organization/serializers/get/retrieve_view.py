@@ -78,12 +78,13 @@ class OrganizationDescUpdateSerializer(serializers.ModelSerializer):
 
 
 class OrganizationHomeSerializer(serializers.ModelSerializer):
-    # region = serializers.CharField(source='region.name', read_only=True)
+    region = serializers.CharField(source='region.name', read_only=True)
     # desc = serializers.SerializerMethodField()
     # organization_type = serializers.CharField(source='organization_type.name', read_only=True)
     # organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
     # advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
+    access_date = serializers.SerializerMethodField()
 
     # degree = serializers.SerializerMethodField()
 
@@ -100,11 +101,16 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             'organization_type',
             'rating',
             # 'organization_type_id',
-            # 'region',
+            'region',
             # 'advantages',
             'landing',
+            'access_date',
             # 'degree'
         ]
+
+    def get_access_date(self, obj):
+        landing_qs = OrganizationLandingPage.objects.filter(organization=obj, deleted=False)
+        return landing_qs.first().expire_date.strftime('%d.%m.%Y')
 
     def get_landing(self, obj):
         register_academic_year()
