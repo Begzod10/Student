@@ -13,6 +13,7 @@ class OrganizationLandingPageDestroyApiView(generics.DestroyAPIView):
         try:
             instance = OrganizationLandingPage.objects.get(pk=obj_id)
             instance.deleted = True  # Call your overridden delete method
+            instance.save()
             return Response({"message": "Yo'nalish muvaffaqiyatli o'chirildi"},
                             status=200)  # Attach the status code here
         except OrganizationLandingPage.DoesNotExist:

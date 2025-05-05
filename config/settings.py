@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'jazzmin',
     'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LANGUAGE_CODE = 'en-us'
 
@@ -123,7 +124,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static_admin/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -131,6 +132,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
 MODELTRANSLATION_LANGUAGES = ('uz', 'en', 'ru')
+TRANSLATABLE_MODEL_MODULES = []
 
 LANGUAGES = (
     ('en', _('English')),
@@ -146,15 +148,11 @@ CACHES = {
 SESSION_COOKIE_AGE = 1209600
 SESSION_SAVE_EVERY_REQUEST = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-Visitor-ID',  # Frontend yuboradigan header
+    'X-Visitor-ID',
 ]
 
-# Agar kerak bo'lsa, usullarga ruxsat
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS',
-]
+
+JAZZMIN_SETTINGS = {
+    "show_ui_builder": True,
+
+}

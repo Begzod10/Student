@@ -1,3 +1,4 @@
+from django.db.models import Min, Max
 from rest_framework import serializers
 
 from organizations.models.models import Organization
@@ -5,11 +6,12 @@ from organizations.models.models import OrganizationGallery
 from organizations.models.organization_landing_page import OrganizationAdvantage, OrganizationLandingPage
 from organizations.organization_type.serializers.get.list import OrganizationTypeSerializerList
 from students.academic_year.functions.register_academic_year import register_academic_year
-from students.region.serializers.get.retrieve_view import RegionSerializer
+from students.region.serializers.get.retrieve_view import RegionSerializer, DistrictSerializer
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
     region = RegionSerializer()
+    district = DistrictSerializer()
     organization_type = OrganizationTypeSerializerList()
     request_count = serializers.SerializerMethodField()
 
@@ -28,7 +30,15 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'grand_text',
             "grand_json",
             'inn',
-            'request_count'
+            'request_count',
+            'instagram_link',
+            'facebook_link',
+            'telegram_link',
+            'youtube_link',
+            'website_link',
+            'address',
+            'email',
+            'district'
         ]
 
     def get_request_count(self, obj):
@@ -68,12 +78,13 @@ class OrganizationDescUpdateSerializer(serializers.ModelSerializer):
 
 
 class OrganizationHomeSerializer(serializers.ModelSerializer):
-    # region = serializers.CharField(source='region.name', read_only=True)
+    region = serializers.CharField(source='region.name', read_only=True)
     # desc = serializers.SerializerMethodField()
     # organization_type = serializers.CharField(source='organization_type.name', read_only=True)
     # organization_type_id = serializers.IntegerField(source='organization_type.id', read_only=True)
     # advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
+    access_date = serializers.SerializerMethodField()
 
     # degree = serializers.SerializerMethodField()
 
@@ -83,40 +94,50 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'locations',
-            # 'desc',
+            'desc',
+            'desc_json',
             # 'phone',
             'img',
             'organization_type',
+            'rating',
             # 'organization_type_id',
-            # 'region',
+            'region',
             # 'advantages',
             'landing',
+            'access_date',
             # 'degree'
         ]
 
+    def get_access_date(self, obj):
+        landing_qs = OrganizationLandingPage.objects.filter(organization=obj, deleted=False)
+        return landing_qs.first().expire_date.strftime('%d.%m.%Y') if landing_qs.exists() else None
+
     def get_landing(self, obj):
         register_academic_year()
-        obj = OrganizationLandingPage.objects.filter(organization=obj).first()
-        if obj:
+
+        landing_qs = OrganizationLandingPage.objects.filter(organization=obj, deleted=False)
+        landing = landing_qs.first()
+        price_stats = landing_qs.aggregate(
+            min_sum=Min('price'),
+            max_sum=Max('price')
+        )
+        if landing:
             data = {
-                'id': obj.id,
-                # 'start_date': obj.start_date,
-                # 'expired_date': obj.expire_date,
-                'shift': obj.shift.name,
-                'price': obj.price if obj else None,
-                # 'degree': obj.degree.name,
-                # 'field': obj.field.name if obj.field else None,
-                'requirements': obj.requirements,
-                'language': obj.education_language.name if obj.education_language else None,
-                'grant': obj.grant,
-                # 'desc': obj.desc,
-                # 'desc_json': obj.desc_json
+                'id': landing.id,
+                'shift': [shift.name for shift in landing.shift.all()],
+                'price': landing.price,
+                'price_min': price_stats['min_sum'],
+                'price_max': price_stats['max_sum'],
+                'requirements': landing.requirements,
+                'language': [lang.name for lang in landing.education_language.all()],
+                'grant': landing.grant,
             }
             return data
+        return None
 
     def get_degree(self, obj):
         register_academic_year()
-        obj = OrganizationLandingPage.objects.filter(organization=obj).distinct()
+        obj = OrganizationLandingPage.objects.filter(organization=obj, deleted=False).distinct()
         data_dict = {}
 
         for i in obj:
@@ -151,7 +172,13 @@ class OrganizationDescSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'desc',
-            'type'
+            'type',
+            'desc_json',
+            'grand_text',
+            'grand_json',
+            'inn',
+            'img',
+            'name',
         ]
 
 

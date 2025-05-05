@@ -16,18 +16,7 @@ class StudentRequestUpdateView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         status = request.data.get('status')
-        if status == "rejectedRequest":
-            instance.canceled = True
-            instance.request_status = "rejectedRequest"
-        elif status == "acceptedRequest":
-            instance.accepted = True
-            instance.request_status = "acceptedRequest"
-        elif status == "returnRequest":
-            instance.back_recovery = True
-            instance.request_status = "returnRequest"
-        elif status == "invitedRequest":
-            instance.called_to_exam = True
-            instance.request_status = "invitedRequest"
+        instance.request_status = status
         instance.save()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)

@@ -30,9 +30,11 @@ class Users(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     phone_extra = models.CharField(max_length=255, null=True)
     passport_seria = models.CharField(max_length=255, null=True)
+    passport_number = models.CharField(max_length=255, null=True)
     file = models.ForeignKey('organizations.File', on_delete=models.SET_NULL, null=True)
     USERNAME_FIELD = 'phone'
     image = models.ImageField(upload_to='users/', null=True, blank=True)
+    certificate = models.ImageField(upload_to='certificate/', null=True, blank=True)
     groups = models.ManyToManyField(
         Group,
         related_name="customuser_groups",
@@ -62,3 +64,16 @@ def sync_phone_username(sender, instance, **kwargs):
         raise ValidationError("This phone number is already in use. Please use a different phone number.")
     if Users.objects.filter(username=instance.username).exclude(id=instance.id).exists():
         raise ValidationError("This username is already taken. Please choose another one.")
+
+
+class Comments(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    rating = models.IntegerField(null=True, blank=True)
+    organization = models.ForeignKey('organizations.Organization', on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
+    surname = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        app_label = 'users'

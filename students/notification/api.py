@@ -38,10 +38,10 @@ class NotificationForStudentView(generics.ListAPIView):
         organization = Organization.objects.get(id=organization_id)
 
         try:
-            student = Student.objects.get(user_id=student_id)
+            student = Student.objects.get(id=student_id)
         except Student.DoesNotExist:
             try:
-                student = Student.objects.get(id=student_id)
+                student = Student.objects.get(user_id=student_id)
             except Student.DoesNotExist:
                 return Notification.objects.none()
         if type_param == 'student':
@@ -83,10 +83,10 @@ class NotificationForOrganizationView(generics.ListAPIView):
             return Organization.objects.none()
 
         try:
-            student = Student.objects.get(user_id=self.kwargs['pk'])
+            student = Student.objects.get(id=self.kwargs['pk'])
         except Student.DoesNotExist:
             try:
-                student = Student.objects.get(id=self.kwargs['pk'])
+                student = Student.objects.get(user_id=self.kwargs['pk'])
             except Student.DoesNotExist:
                 return Notification.objects.none()
 

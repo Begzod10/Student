@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/', include('config.utils.swagger')),
     path('api/students/', include('students.urls')),
     path('api/users/', include('users.user.urls')),
+    path('api/comments/', include('users.comments.urls')),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('api/organizations/', include('organizations.urls')),
@@ -19,7 +20,6 @@ urlpatterns = [
     path('api/education_language/', include('education.education.api.urls')),
     path('api/organization_fields/', include('organizations.organization_fields.urls')),
     path('api/test/', include('test.urls'))
-
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

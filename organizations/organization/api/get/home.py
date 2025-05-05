@@ -1,6 +1,7 @@
 from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,8 +17,13 @@ from organizations.organization.serializers.get.retrieve_view import Organizatio
 class HomeOrganizationView(generics.ListAPIView):
     queryset = Organization.objects.filter(deleted=False).distinct()
     serializer_class = OrganizationHomeSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = OrganizationLandingPageFilter
+    search_fields = [
+        'name',
+        '^name',
+        '=name',
+    ]
 
 
 class HomeOrganizationRetrieveDescView(generics.RetrieveAPIView):
@@ -71,7 +77,7 @@ class HomeOrganizationRetrieveLandingPageDeegreeView(generics.ListAPIView):
         pk = self.kwargs.get('pk')
         if pk is None:
             raise KeyError("'pk' not found in URL kwargs.")
-        return OrganizationLandingPage.objects.filter(degree_id=pk)
+        return OrganizationLandingPage.objects.filter(degree_id=pk,deleted=False)
 
     def get_object(self):
         queryset = self.get_queryset()
@@ -122,7 +128,7 @@ class HomeOrganizationCombinedView(APIView):
         return serializer.data
 
     def get_degree(self, organization_id):
-        queryset = OrganizationLandingPage.objects.filter(organization_id=organization_id)
+        queryset = OrganizationLandingPage.objects.filter(organization_id=organization_id,deleted=False)
         if not queryset.exists():
             return []
         serializer = OrganizationOrganizationLandingPageSerializer(queryset, many=True)
@@ -130,7 +136,7 @@ class HomeOrganizationCombinedView(APIView):
 
     def get_landing(self, organization_id):
         try:
-            obj = OrganizationLandingPage.objects.filter(organization_id=organization_id)
+            obj = OrganizationLandingPage.objects.filter(organization_id=organization_id,deleted=False)
             serializer = OrganizationOrganizationLandingPageSerializer2(obj, many=True)
             return serializer.data
         except OrganizationLandingPage.DoesNotExist:

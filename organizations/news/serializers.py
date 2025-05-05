@@ -1,9 +1,16 @@
+import pprint
 import re
 
 from rest_framework import serializers
 
-from ..models.news import News, NewsView
+from ..models.news import News, NewsView, NewsBlock
 from ..models.organization_landing_page import OrganizationLandingPage
+
+
+class NewsShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ['id', 'title', 'img', 'date']  # include only lightweight fields
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -11,10 +18,14 @@ class NewsSerializer(serializers.ModelSerializer):
     shared = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField(allow_null=True, required=False, read_only=True)
     visitor_id = serializers.SerializerMethodField()
+    desc_json = serializers.SerializerMethodField()
+    blocks = serializers.SerializerMethodField()
+    other_news = serializers.SerializerMethodField()
 
     class Meta:
         model = News
-        fields = ['id', 'title', 'desc_json', 'img', 'date', 'deleted', 'views_display', 'shared', 'landing','visitor_id']
+        fields = ['id', 'title', 'deleted', 'views_display', 'shared', 'landing', 'desc_json',
+                  'visitor_id', 'organization', 'img', 'date', 'blocks', 'other_news']
 
     def get_views_display(self, obj):
         view_count = NewsView.objects.filter(news=obj).count()
@@ -22,32 +33,43 @@ class NewsSerializer(serializers.ModelSerializer):
             return f"{view_count / 1000:.1f}K views"
         return f"{view_count} views"
 
+    def get_other_news(self, obj):
+
+        return NewsShortSerializer(News.objects.exclude(id=obj.id)[:5], many=True).data
+
+    def get_blocks(self, obj):
+        return NewsBlockSerializer(obj.news_blocks.all().order_by('index'), many=True).data
+
+    def get_desc_json(self, obj):
+        news_blocks = obj.news_blocks.all().order_by('index')
+        return news_blocks[0].desc_json if news_blocks else None
+
     def get_landing(self, obj):
         extra_details = []
 
-        if self.context.get('view') and self.context['view'].action == 'retrieve':
+        view = self.context.get('view')
+        if view and hasattr(view, 'action') and view.action == 'retrieve':  # <- safer
             try:
                 org = obj.organization
-                org_landing = OrganizationLandingPage.objects.filter(organization=org).order_by('-start_date').all()
+                org_landing = OrganizationLandingPage.objects.filter(
+                    organization=org, deleted=False
+                ).order_by('-start_date').all()
                 if org_landing:
-
-                    for org_landing in org_landing:
+                    for landing in org_landing:
                         extra_details.append({
-                            'id': org_landing.id,
-                            'start_date': org_landing.start_date,
-                            'expired_date': org_landing.expire_date,
-                            'shift': org_landing.shift.name,
-                            'price': org_landing.price if org_landing else None,
-                            'degree': org_landing.degree.name,
-                            'field': org_landing.field.name if org_landing.field else None,
-                            'requirements': org_landing.requirements,
-                            'language': org_landing.education_language.name if org_landing.education_language else None,
-                            'grant': org_landing.grant,
-                            'desc': org_landing.desc,
-                            'desc_json': org_landing.desc_json
+                            'id': landing.id,
+                            'start_date': landing.start_date,
+                            'expired_date': landing.expire_date,
+                            'shift': landing.shift.name,
+                            'price': landing.price if landing else None,
+                            'degree': landing.degree.name,
+                            'field': landing.field.name if landing.field else None,
+                            'requirements': landing.requirements,
+                            'language': landing.education_language.name if landing.education_language else None,
+                            'grant': landing.grant,
+                            'desc': landing.desc,
+                            'desc_json': landing.desc_json
                         })
-                        ''
-
             except (AttributeError, OrganizationLandingPage.DoesNotExist):
                 pass
         return extra_details
@@ -57,8 +79,9 @@ class NewsSerializer(serializers.ModelSerializer):
         news_url = f"{base_url}news/{obj.id}"
 
         desc_text = ""
-        if obj.desc_json and 'text' in obj.desc_json:
-            full_text = obj.desc_json['text']
+        news_blocks = obj.news_blocks.all().order_by('index')
+        if news_blocks and news_blocks[0].desc_json and 'text' in news_blocks[0].desc_json:
+            full_text = news_blocks[0].desc_json['text']
             clean_text = re.sub(r'<[^>]+>', '', full_text)
             period_index = clean_text.find('.')
             desc_text = clean_text[:period_index + 1] if period_index != -1 else clean_text
@@ -75,3 +98,29 @@ class NewsSerializer(serializers.ModelSerializer):
     def get_visitor_id(self, obj):
         # Requestdan visitor_id ni olish
         return self.context.get('visitor_id')
+
+
+class NewsBlockSerializer(serializers.ModelSerializer):
+    desc_json = serializers.JSONField(required=False, allow_null=True)
+    img_url = serializers.SerializerMethodField()
+
+    def get_img_url(self, obj):
+        return obj.img.url if obj.img else None
+
+    class Meta:
+        model = NewsBlock
+        fields = ['id', 'desc_json', 'img', 'news', 'index', 'type_block', 'img_url']
+
+    def create(self, validated_data):
+        last_block = NewsBlock.objects.filter(news=validated_data['news']).order_by('-index').first()
+        validated_data['index'] = last_block.index + 1 if last_block else 0
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+    def destroy(self, instance):
+        instance.delete()
