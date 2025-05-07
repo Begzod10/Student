@@ -19,7 +19,9 @@ class TestCreateView(generics.CreateAPIView):
         return Response(TestRetrieveSerializer(instance).data, status=status.HTTP_201_CREATED)
 
 
-
+class TestUpdateView(generics.UpdateAPIView):
+    queryset = Test.objects.all()
+    serializer_class = TestRetrieveSerializer
 
 
 class TestDeleteView(generics.DestroyAPIView):

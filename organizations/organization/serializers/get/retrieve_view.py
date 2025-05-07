@@ -105,6 +105,8 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             # 'advantages',
             'landing',
             'access_date',
+            'grand_text',
+            'grand_json',
             # 'degree'
         ]
 
@@ -273,8 +275,8 @@ class OrganizationOrganizationLandingPageSerializer2(serializers.ModelSerializer
 
     def get_field(self, obj):
         data = {
-            'id': obj.field.id,
-            'name': obj.field.name,
-            'desc': obj.field.desc
+            'id': obj.field.id if obj.field else None,
+            'name': obj.field.name if obj.field else None,
+            'desc': obj.field.desc if obj.field else None
         }
         return data
