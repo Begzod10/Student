@@ -31,7 +31,7 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks', 'number_questions']
+        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory']
 
 
 class TestListSerializer(serializers.ModelSerializer):

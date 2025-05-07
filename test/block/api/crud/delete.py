@@ -13,4 +13,4 @@ class TestBlockDeleteView(generics.DestroyAPIView):
         instance = self.get_object()
         instance.delete()
         return Response({"detail": "TestBlock and related questions deleted successfully."},
-                        status=status.HTTP_204_NO_CONTENT)
+                        status=status.HTTP_200_OK)
