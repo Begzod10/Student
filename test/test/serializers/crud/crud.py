@@ -34,10 +34,10 @@ class TestCreateSerializer(serializers.ModelSerializer):
         return test
 
 
-
-
 class TestUpdateSerializer(serializers.ModelSerializer):
     blocks = TestBlockSerializer(many=True, required=False)
+    duration = serializers.IntegerField(required=False, allow_null=True)
+    is_mandatory = serializers.BooleanField(required=False, allow_null=True)
 
     class Meta:
         model = Test
