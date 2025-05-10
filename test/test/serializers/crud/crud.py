@@ -17,7 +17,7 @@ class TestCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
+        fields = ['id', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
 
     def create(self, validated_data):
         blocks_data = validated_data.pop('blocks', [])
@@ -38,10 +38,11 @@ class TestUpdateSerializer(serializers.ModelSerializer):
     blocks = TestBlockSerializer(many=True, required=False)
     duration = serializers.IntegerField(required=False, allow_null=True)
     is_mandatory = serializers.BooleanField(required=False, allow_null=True)
+    field_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
+        fields = ['id', 'field_data', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
 
     def update(self, instance, validated_data):
         pprint.pprint(validated_data)
@@ -52,7 +53,18 @@ class TestUpdateSerializer(serializers.ModelSerializer):
                                                              defaults=block_data)
             for question_data in questions_data:
                 TestQuestion.objects.create(block=block, test=instance, **question_data)
+
         return super().update(instance, validated_data)
+
+    def get_field_data(self, obj):
+        return {
+            "id": obj.field.id,
+            "name": obj.field.name,
+            "organization_type": {
+                "id": obj.field.organization_type.id,
+                "name": obj.field.organization_type.name
+            }
+        }
 
 
 class StudentTestSerializer(serializers.ModelSerializer):

@@ -23,7 +23,7 @@ class TestBlockSerializerGet(serializers.ModelSerializer):
 class TestRetrieveSerializer(serializers.ModelSerializer):
     blocks = TestBlockSerializerGet(many=True, read_only=True)
     subject = SubjectSerializer(read_only=True)
-    field = OrganizationFieldsListSerializers(read_only=True)
+    field_data = serializers.SerializerMethodField()
     number_questions = serializers.SerializerMethodField()
 
     def get_number_questions(self, obj):
@@ -31,7 +31,17 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory']
+        fields = ['id', 'field', 'field_data', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory']
+
+    def get_field_data(self, obj):
+        return {
+            "id": obj.field.id,
+            "name": obj.field.name,
+            "organization_type": {
+                "id": obj.field.organization_type.id,
+                "name": obj.field.organization_type.name
+            }
+        }
 
 
 class TestListSerializer(serializers.ModelSerializer):
@@ -44,4 +54,4 @@ class TestListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'name', 'field', 'subject', 'duration', 'number_questions']
+        fields = ['id', 'field', 'subject', 'duration', 'number_questions']

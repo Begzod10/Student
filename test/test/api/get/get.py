@@ -10,9 +10,15 @@ from test.test.filtersets.testflter import TestFilter
 from test.test.serializers.get.get import TestRetrieveSerializer, TestListSerializer
 from test.models.test_block import TestBlock
 
+
 class TestRetrieveView(generics.RetrieveAPIView):
     queryset = Test.objects.all()
     serializer_class = TestRetrieveSerializer
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class TestListApiView(generics.ListAPIView):
