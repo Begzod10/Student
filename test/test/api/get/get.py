@@ -123,3 +123,11 @@ class StudentTestResultListApiView(generics.ListAPIView):
 
         return self.queryset
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        test_id = instance.test.id
+        get_test = StudentTest.objects.filter(id=test_id).first()
+        student_results = StudentTestResult.objects.filter(test_id=test_id)
+        student_results.delete()
+        get_test.delete()
+        return Response(status=200)

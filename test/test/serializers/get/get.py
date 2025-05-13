@@ -64,6 +64,9 @@ class StudentTestResultSerializer(serializers.ModelSerializer):
     surname = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
 
+    # field = serializers.SerializerMethodField()
+    # subject = serializers.SerializerMethodField()
+
     class Meta:
         model = StudentTestResult
         fields = ['test', 'result', 'true_answers', 'name', 'surname', 'id', 'date']
@@ -95,3 +98,17 @@ class StudentTestResultSerializer(serializers.ModelSerializer):
         if obj.test:
             return obj.test.date.strftime("%Y-%m-%d")
         return None
+
+    # def get_field(self, obj):
+    #     if obj.test:
+    #         test_obj = obj.test.test1 or obj.test.test2
+    #         if test_obj:
+    #             return obj.test_obj.field.name if obj.test_obj.field else None
+    #     return None
+    #
+    # def get_subject(self, obj):
+    #     if obj.test:
+    #         test_obj = obj.test.test1 or obj.test.test2
+    #         if test_obj:
+    #             return obj.test_obj.subject.name if obj.test_obj.subject else None
+    #     return None
