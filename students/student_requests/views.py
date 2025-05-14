@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
-
+from users.models import Users
 from students.models.student import StudentRequest
 from students.serializers.student import StudentRequestSerializerList, StudentRequestSerializerRetrieve
 from students.student_requests.filters import StudentRequestFilter
@@ -35,42 +35,49 @@ class StudentRequestRetrieveView(generics.RetrieveAPIView):
 
 @api_view(['GET'])
 def student_request_dashboard(request):
-    stats = StudentRequest.objects.aggregate(
-        accepted_count=Count('id', filter=Q(request_status='acceptedRequest')),
-        back_recovery_count=Count('id', filter=Q(request_status='backRecovery')),
-        canceled_count=Count('id', filter=Q(request_status='canceledRequest')),
-        total_requests_count=Count('id'),
-        new_requests_count=Count(
-            'id',
-            filter=Q(
-                request_status='',
-            )
-        )
-    )
+    user = request.user
+    if request.user.is_superuser:
+        stats_acceptedRequest = StudentRequest.objects.filter(request_status="acceptedRequest").aggregate(Count('id'))
+        stats_rejectedRequest = StudentRequest.objects.filter(request_status="rejectedRequest").aggregate(Count('id'))
+        stats_returnRequest = StudentRequest.objects.filter(request_status="returnRequest").aggregate(Count('id'))
+        stats_newRequest = StudentRequest.objects.filter(request_status="newRequest").aggregate(Count('id'))
+        stats = StudentRequest.objects.aggregate(Count('id'))
+    else:
+        stats_acceptedRequest = StudentRequest.objects.filter(Q(organization=user.organization_id) and
+                                                              Q(request_status="acceptedRequest")).aggregate(
+            Count('id'))
+        stats_rejectedRequest = StudentRequest.objects.filter(Q(organization=user.organization_id) and
+                                                              Q(request_status="rejectedRequest")).aggregate(
+            Count('id'))
+        stats_returnRequest = StudentRequest.objects.filter(Q(organization=user.organization_id) and
+                                                            Q(request_status="returnRequest")).aggregate(Count('id'))
+        stats_newRequest = StudentRequest.objects.filter(Q(organization=user.organization_id) and
+                                                         Q(request_status="newRequest")).aggregate(Count('id'))
+        stats = StudentRequest.objects.filter(Q(organization=user.organization_id)).aggregate(Count('id'))
 
     stats_with_extra_info = [
         {"accepted": {
-            "count": stats["accepted_count"],
+            "count": stats_acceptedRequest,
             "text": "Qabul qilinganlar",
             "color": "#6188ECFF"
         }},
         {"back_recovery": {
-            "count": stats["back_recovery_count"],
+            "count": stats_returnRequest,
             "text": "Tahrirlashgaqaytarilgan",
             "color": "#6188ECFF"
         }},
         {"canceled": {
-            "count": stats["canceled_count"],
+            "count": stats_rejectedRequest,
             "text": "Rad etilgan",
             "color": "#6188ECFF"
         }},
         {"total_requests": {
-            "count": stats["total_requests_count"],
+            "count": stats,
             "text": "Barcha arizalar",
             "color": "#6188ECFF"
         }},
         {"new_requests": {
-            "count": stats["new_requests_count"],
+            "count": stats_newRequest,
             "text": "Yangi kelib tushganlar",
             "color": "#6188ECFF"
         }},

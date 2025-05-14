@@ -45,7 +45,9 @@ class StudentRequestCreateView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-
+        get_request = StudentRequest.objects.get(id=serializer.data.id)
+        get_request.request_status = "newRequest"
+        get_request.save()
         headers = self.get_success_headers(serializer.data)
         return Response({"detail": "Arizangiz topshirildi!", "status": True}, status=status.HTTP_201_CREATED,
                         headers=headers)

@@ -19,12 +19,8 @@ class StudentRequestFilter(django_filters.FilterSet):
 
     def filter_status(self, queryset, name, value):
 
-        if value != 'allRequest' and value != 'newRequest':
+        if value != 'allRequest':
             return queryset.filter(request_status=value)
         elif value == 'allRequest':
             return queryset  # Returning the full queryset is valid
-        elif value == 'newRequest':
-            return queryset.filter(
-                request_status=''
-            )
         return queryset.none()
