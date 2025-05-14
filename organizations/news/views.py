@@ -11,7 +11,7 @@ from django.utils.crypto import get_random_string
 
 class NewsViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
-    queryset = News.objects.filter(deleted=False)
+    queryset = News.objects.filter(deleted=False).order_by('-date')
     serializer_class = NewsSerializer
 
     def create(self, request, *args, **kwargs):
@@ -48,7 +48,7 @@ class NewsViewSet(viewsets.ModelViewSet):
 
 class NewsViewOrganizationList(ListAPIView):
     serializer_class = NewsSerializer
-    queryset = News.objects.all()  # <--- ADD THIS
+    queryset = News.objects.order_by('-date').all()  # <--- ADD THIS
 
     def get_queryset(self):
         organization_id = self.request.query_params.get('organization_id')
@@ -60,6 +60,3 @@ class NewsViewOrganizationList(ListAPIView):
 class NewsBlockViewSet(viewsets.ModelViewSet):
     queryset = NewsBlock.objects.all()
     serializer_class = NewsBlockSerializer
-
-
-
