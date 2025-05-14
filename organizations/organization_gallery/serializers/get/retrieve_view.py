@@ -16,3 +16,5 @@ class OrganizationGallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationGallery
         fields = ['id', 'file', 'organization']
+
+

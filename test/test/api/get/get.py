@@ -4,15 +4,21 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from test.models.models import Test
+from students.models.student import Student
+from test.models.models import Test, StudentTestResult, StudentTest
 from test.test.filtersets.testflter import TestFilter
-from test.test.serializers.get.get import TestRetrieveSerializer, TestListSerializer
+from test.test.serializers.get.get import TestRetrieveSerializer, TestListSerializer, StudentTestResultSerializer
 from test.models.test_block import TestBlock
+
 
 class TestRetrieveView(generics.RetrieveAPIView):
     queryset = Test.objects.all()
     serializer_class = TestRetrieveSerializer
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class TestListApiView(generics.ListAPIView):
@@ -97,3 +103,31 @@ class TestListApiViewForHome(APIView):
         }
 
         return Response(response)
+
+
+class StudentTestResultListApiView(generics.ListAPIView):
+    queryset = StudentTestResult.objects.all()
+    serializer_class = StudentTestResultSerializer
+
+    def get_queryset(self):
+        student_id = self.request.query_params.get('student_id')
+        organization_id = self.request.query_params.get('organization_id')
+
+        if student_id:
+            return self.queryset.filter(test__student_id=student_id)
+
+        elif organization_id:
+            return self.queryset.filter(
+                test__field__organization_id=organization_id
+            )
+
+        return self.queryset
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        test_id = instance.test.id
+        get_test = StudentTest.objects.filter(id=test_id).first()
+        student_results = StudentTestResult.objects.filter(test_id=test_id)
+        student_results.delete()
+        get_test.delete()
+        return Response(status=200)

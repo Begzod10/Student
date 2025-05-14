@@ -35,7 +35,7 @@ class NewsSerializer(serializers.ModelSerializer):
 
     def get_other_news(self, obj):
 
-        return NewsShortSerializer(News.objects.exclude(id=obj.id)[:5], many=True).data
+        return NewsShortSerializer(News.objects.exclude(id=obj.id).order_by('-date')[:5], many=True).data
 
     def get_blocks(self, obj):
         return NewsBlockSerializer(obj.news_blocks.all().order_by('index'), many=True).data

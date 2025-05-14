@@ -16,7 +16,17 @@ class TestCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         instance = self.get_queryset().get(id=response.data['id'])
-        return Response(TestRetrieveSerializer(instance).data, status=status.HTTP_201_CREATED)
+        return Response(TestRetrieveSerializer(instance).data, status=status.HTTP_200_OK)
+
+
+class TestUpdateView(generics.UpdateAPIView):
+    queryset = Test.objects.all()
+    serializer_class = TestRetrieveSerializer
+
+
+class TestDeleteView(generics.DestroyAPIView):
+    queryset = Test.objects.all()
+    serializer_class = TestRetrieveSerializer
 
 
 class StudentTestViewSet(viewsets.ModelViewSet):

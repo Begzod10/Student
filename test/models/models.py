@@ -2,10 +2,10 @@ from django.db import models
 
 from organizations.models.organization_fields import OrganizationFields
 from test.models.subject import Subject
+import datetime
 
 
 class Test(models.Model):
-    name = models.CharField(null=True, blank=True)
     field = models.ForeignKey(OrganizationFields, on_delete=models.CASCADE, related_name='blocks', null=True,
                               blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
@@ -20,6 +20,7 @@ class StudentTest(models.Model):
     name = models.CharField(null=True, blank=True)
     field = models.ForeignKey(OrganizationFields, on_delete=models.SET_NULL, null=True, blank=True)
     surname = models.CharField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True, default=datetime.date.today)
 
 
 class StudentTestResult(models.Model):
