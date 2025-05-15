@@ -86,6 +86,12 @@ def student_request_dashboard(request):
             "text": "Sahifaga tashrif buyuruvchilar",
             "color": "#6DEFC6FF"
         }},
+        {"users": {
+            "count": Users.objects.all().count(),
+            "text": "Foydalanuvchilar",
+            "color": "#6DEFC6FF",
+            'current_user': user.name
+        }}
     ]
 
     return Response(stats_with_extra_info)
