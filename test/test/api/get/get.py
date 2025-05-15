@@ -4,11 +4,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from students.models.student import Student
+
 from test.models.models import Test, StudentTestResult, StudentTest
+from test.models.test_block import TestBlock
 from test.test.filtersets.testflter import TestFilter
 from test.test.serializers.get.get import TestRetrieveSerializer, TestListSerializer, StudentTestResultSerializer
-from test.models.test_block import TestBlock
 
 
 class TestRetrieveView(generics.RetrieveAPIView):
@@ -67,7 +67,7 @@ class TestListApiViewForHome(APIView):
                 mandatory_subjects.append({
                     "subject": subject_name,
                     "test_id": selected.id,
-                    "test_name": selected.name,
+                    # "test_name": selected.name,
                     "duration": duration,
                     "question_count": TestBlock.objects.filter(test=selected).count()
                 })
@@ -87,13 +87,13 @@ class TestListApiViewForHome(APIView):
         response = {
             "main_test": {
                 "id": main_test.id if main_test else None,
-                "name": main_test.name if main_test else None,
+                # "name": main_test.name if main_test else None,
                 "question_count": TestBlock.objects.filter(test=main_test).count(),
                 "duration": main_test.duration if main_test else 0,
             },
             "second_test": {
                 "id": second_test.id if second_test else None,
-                "name": second_test.name if second_test else None,
+                # "name": second_test.name if second_test else None,
                 "duration": second_test.duration if second_test else 0,
                 "question_count": TestBlock.objects.filter(test=second_test).count()
 
@@ -131,3 +131,17 @@ class StudentTestResultListApiView(generics.ListAPIView):
         student_results.delete()
         get_test.delete()
         return Response(status=200)
+
+
+class StudentTestResultDeleteApiView(generics.DestroyAPIView):
+    queryset = StudentTestResult.objects.all()
+    serializer_class = StudentTestResultSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        test_id = instance.test.id
+        get_test = StudentTest.objects.filter(id=test_id).first()
+        student_results = StudentTestResult.objects.filter(test_id=test_id)
+        student_results.delete()
+        get_test.delete()
+        return Response({"message": "Result muvaffaqiyatli o'chirildi"},status=200)
