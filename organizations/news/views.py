@@ -58,5 +58,5 @@ class NewsViewOrganizationList(ListAPIView):
 
 
 class NewsBlockViewSet(viewsets.ModelViewSet):
-    queryset = NewsBlock.objects.all()
+    queryset = NewsBlock.objects.order_by('index').all()
     serializer_class = NewsBlockSerializer
