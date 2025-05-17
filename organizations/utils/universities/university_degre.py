@@ -8,8 +8,8 @@ degrees = [
     {
         'name': 'Doktorantura'
     },
-    {
-        'name': 'Postdoktorantura'
-    }
+    # {
+    #     'name': 'Postdoktorantura'
+    # }
 
 ]
