@@ -85,6 +85,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
     # advantages = serializers.SerializerMethodField()
     landing = serializers.SerializerMethodField()
     access_date = serializers.SerializerMethodField()
+    expire_date = serializers.SerializerMethodField()
 
     # degree = serializers.SerializerMethodField()
 
@@ -105,6 +106,7 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
             # 'advantages',
             'landing',
             'access_date',
+            'expire_date',
             'grand_text',
             'grand_json',
             # 'degree'
@@ -112,7 +114,11 @@ class OrganizationHomeSerializer(serializers.ModelSerializer):
 
     def get_access_date(self, obj):
         landing_qs = OrganizationLandingPage.objects.filter(organization=obj, deleted=False)
-        return landing_qs.first().expire_date.strftime('%d.%m.%Y') if landing_qs.exists() else None
+        return landing_qs.first().start_date.strftime('%d.%m') if landing_qs.exists() else None
+
+    def get_expire_date(self, obj):
+        landing_qs = OrganizationLandingPage.objects.filter(organization=obj, deleted=False)
+        return landing_qs.first().expire_date.strftime('%d.%m') if landing_qs.exists() else None
 
     def get_landing(self, obj):
         register_academic_year()
