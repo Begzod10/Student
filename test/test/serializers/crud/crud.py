@@ -8,7 +8,7 @@ from test.models.models import StudentTest
 from test.models.models import Test
 from test.models.test_block import TestBlock
 from test.models.test_question import TestQuestion
-
+from organizations.models.organization_fields import OrganizationFields
 from rest_framework import status
 
 
@@ -21,9 +21,15 @@ class TestCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         blocks_data = validated_data.pop('blocks', [])
+        field_data = validated_data.pop('field', [])
 
+        # Create test without the ManyToMany field
         test = Test.objects.create(**validated_data)
 
+        # Assign the ManyToMany field after creation
+        test.field.set(field_data)
+
+        # Create blocks and questions
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
             block = TestBlock.objects.create(test=test, **block_data)
@@ -38,6 +44,7 @@ class TestUpdateSerializer(serializers.ModelSerializer):
     blocks = TestBlockSerializer(many=True, required=False)
     duration = serializers.IntegerField(required=False, allow_null=True)
     is_mandatory = serializers.BooleanField(required=False, allow_null=True)
+    field = serializers.PrimaryKeyRelatedField(queryset=OrganizationFields.objects.all(), many=True)
     field_data = serializers.SerializerMethodField()
 
     class Meta:
@@ -45,26 +52,43 @@ class TestUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'field_data', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
 
     def update(self, instance, validated_data):
+        import pprint
         pprint.pprint(validated_data)
+
         blocks_data = validated_data.pop('blocks', [])
+        field_data = validated_data.pop('field', [])
+
+        # Update standard fields
+        instance = super().update(instance, validated_data)
+
+        # Update many-to-many field
+        instance.field.set(field_data)
+
+        # Handle blocks and questions
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            block, created = TestBlock.objects.get_or_create(test=instance, text=block_data['text'],
-                                                             defaults=block_data)
+            block, created = TestBlock.objects.get_or_create(
+                test=instance,
+                text=block_data['text'],
+                defaults=block_data
+            )
             for question_data in questions_data:
                 TestQuestion.objects.create(block=block, test=instance, **question_data)
 
-        return super().update(instance, validated_data)
+        return instance
 
     def get_field_data(self, obj):
-        return {
-            "id": obj.field.id,
-            "name": obj.field.name,
-            "organization_type": {
-                "id": obj.field.organization_type.id,
-                "name": obj.field.organization_type.name
+        return [
+            {
+                "id": field.id,
+                "name": field.name,
+                "organization_type": {
+                    "id": field.organization_type.id if field.organization_type else None,
+                    "name": field.organization_type.name if field.organization_type else None
+                }
             }
-        }
+            for field in obj.field.all()
+        ]
 
 
 class StudentTestSerializer(serializers.ModelSerializer):

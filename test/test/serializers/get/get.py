@@ -35,14 +35,17 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
         fields = ['id', 'field', 'field_data', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory']
 
     def get_field_data(self, obj):
-        return {
-            "id": obj.field.id if obj.field else None,
-            "name": obj.field.name if obj.field else None,
-            "organization_type": {
-                "id": obj.field.organization_type.id if obj.field and obj.field.organization_type else None,
-                "name": obj.field.organization_type.name if obj.field and obj.field.organization_type else None
+        return [
+            {
+                "id": field.id,
+                "name": field.name,
+                "organization_type": {
+                    "id": field.organization_type.id if field.organization_type else None,
+                    "name": field.organization_type.name if field.organization_type else None
+                }
             }
-        }
+            for field in obj.field.all()
+        ]
 
 
 class TestListSerializer(serializers.ModelSerializer):
@@ -80,7 +83,18 @@ class StudentTestResultSerializer(serializers.ModelSerializer):
                     'duration': test_obj.duration,
                     'is_mandatory': test_obj.is_mandatory,
                     'subject': SubjectSerializer(test_obj.subject).data if test_obj.subject else None,
-                    'field': OrganizationFieldsSerializer(test_obj.field).data if test_obj.field else None
+                    'field': [
+                        {
+                            "id": field.id,
+                            "name": field.name,
+                            "organization_type": {
+                                "id": field.organization_type.id if field.organization_type else None,
+                                "name": field.organization_type.name if field.organization_type else None
+                            }
+                        }
+                        for field in test_obj.field.all()
+                    ]
+
                 }
         return None
 
