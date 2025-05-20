@@ -27,12 +27,12 @@ types = [
 ]
 
 
-@receiver(post_migrate)
-def create_dates(sender, **kwargs):
-    for i in types:
-        OrganizationType.objects.get_or_create(name=i['name'])
-    universitet = OrganizationType.objects.get(name='Universitet')
-    for i in degrees:
-        OrganizationDegrees.objects.get_or_create(name=i['name'], organization_type=universitet)
-    for i in list:
-        OrganizationFields.objects.get_or_create(name=i['name'], organization_type=universitet)
+# @receiver(post_migrate)
+# def create_dates(sender, **kwargs):
+#     for i in types:
+#         OrganizationType.objects.get_or_create(name=i['name'])
+#     universitet = OrganizationType.objects.get(name='Universitet')
+#     for i in degrees:
+#         OrganizationDegrees.objects.get_or_create(name=i['name'], organization_type=universitet)
+#     for i in list:
+#         OrganizationFields.objects.get_or_create(name=i['name'], organization_type=universitet)
