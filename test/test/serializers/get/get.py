@@ -51,6 +51,7 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
 class TestListSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(read_only=True)
     field = OrganizationFieldsListSerializers(read_only=True)
+    field_data = serializers.SerializerMethodField()
     number_questions = serializers.SerializerMethodField()
 
     def get_number_questions(self, obj):
@@ -60,6 +61,18 @@ class TestListSerializer(serializers.ModelSerializer):
         model = Test
         fields = ['id', 'field', 'subject', 'duration', 'number_questions']
 
+    def get_field_data(self, obj):
+        return [
+            {
+                "id": field.id,
+                "name": field.name,
+                "organization_type": {
+                    "id": field.organization_type.id if field.organization_type else None,
+                    "name": field.organization_type.name if field.organization_type else None
+                }
+            }
+            for field in obj.field.all()
+        ]
 
 class StudentTestResultSerializer(serializers.ModelSerializer):
     test = serializers.SerializerMethodField()
