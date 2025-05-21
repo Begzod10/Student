@@ -59,7 +59,7 @@ class TestListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'field', 'subject', 'duration', 'number_questions']
+        fields = ['id', 'field', 'field_data', 'subject', 'duration', 'number_questions']
 
     def get_field_data(self, obj):
         return [
@@ -73,6 +73,7 @@ class TestListSerializer(serializers.ModelSerializer):
             }
             for field in obj.field.all()
         ]
+
 
 class StudentTestResultSerializer(serializers.ModelSerializer):
     test = serializers.SerializerMethodField()
