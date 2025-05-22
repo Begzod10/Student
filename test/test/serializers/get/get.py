@@ -32,7 +32,8 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'field', 'field_data', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory']
+        fields = ['id', 'field', 'field_data', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory',
+                  'status']
 
     def get_field_data(self, obj):
         return [
@@ -59,7 +60,7 @@ class TestListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'field', 'field_data', 'subject', 'duration', 'number_questions']
+        fields = ['id', 'field', 'field_data', 'subject', 'duration', 'number_questions', 'is_mandatory', 'status']
 
     def get_field_data(self, obj):
         return [
