@@ -10,3 +10,5 @@ class OrganizationFilter(filters.FilterSet):
     class Meta:
         model = Organization
         fields = ['organization_type', 'region', 'district']
+
+

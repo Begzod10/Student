@@ -7,3 +7,6 @@ class OrganizationUserUpdateView(UpdateAPIView):
     # permission_classes = [IsAuthenticated]
     queryset = OrganizationUser.objects.all()
     serializer_class = OrganizationUserCreateUpdateSerializer
+
+
+

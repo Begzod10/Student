@@ -54,7 +54,7 @@ class NewsViewOrganizationList(ListAPIView):
         organization_id = self.request.query_params.get('organization_id')
         if organization_id:
             return self.queryset.filter(organization_id=organization_id, deleted=False)
-        return self.queryset.none()
+        return self.queryset
 
 
 class NewsBlockViewSet(viewsets.ModelViewSet):

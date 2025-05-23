@@ -108,7 +108,7 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
         return obj.student.user.image if obj.student.user.image else None
 
     def get_region(self, obj):
-        return obj.organization.region.name if obj.organization.region else None
+        return obj.organization.region.name if obj.organization.region and obj.organizationl else None
 
 
 class StudentRequestProfileSerializers(serializers.ModelSerializer):
@@ -125,7 +125,6 @@ class StudentRequestProfileSerializers(serializers.ModelSerializer):
         fields = [
             'id', 'degree', 'language', 'shift', 'location', 'name',
             'price', 'region',
-
 
             'request_status', 'date'
         ]
