@@ -30,9 +30,15 @@ class TestCreateSerializer(serializers.ModelSerializer):
         test.field.set(field_data)
 
         # Create blocks and questions
+
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            block = TestBlock.objects.create(test=test, **block_data)
+            existing_block = TestBlock.objects.filter(test=test, text=block_data['text'],
+                                                      image=block_data['image']).first()
+            if not existing_block or existing_block.image:
+                block = TestBlock.objects.create(test=test, **block_data)
+            else:
+                block = existing_block
 
             for question_data in questions_data:
                 TestQuestion.objects.create(block=block, test=test, **question_data)
@@ -52,24 +58,26 @@ class TestUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'field_data', 'field', 'subject', 'duration', 'blocks', 'is_mandatory', 'status']
 
     def update(self, instance, validated_data):
-        import pprint
-        pprint.pprint(validated_data)
 
         blocks_data = validated_data.pop('blocks', [])
+        # field_data = validated_data.pop('field', [])
 
         # Update standard fields
         instance = super().update(instance, validated_data)
 
         # Update many-to-many field
+        # pprint.pprint(field_data)
+        # instance.field.set(field_data)
 
         # Handle blocks and questions
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            block, created = TestBlock.objects.get_or_create(
-                test=instance,
-                text=block_data['text'],
-                defaults=block_data
-            )
+            existing_block = TestBlock.objects.filter(test=instance, text=block_data['text']).first()
+            if not existing_block or existing_block.image:
+                block = TestBlock.objects.create(test=instance, **block_data)
+            else:
+                block = existing_block
+
             for question_data in questions_data:
                 TestQuestion.objects.create(block=block, test=instance, **question_data)
 
