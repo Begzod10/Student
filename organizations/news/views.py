@@ -52,7 +52,7 @@ class NewsViewOrganizationList(ListAPIView):
 
     def get_queryset(self):
         organization_id = self.request.query_params.get('organization_id')
-        if organization_id:
+        if organization_id and organization_id != 'null':
             return self.queryset.filter(organization_id=organization_id, deleted=False)
         return self.queryset
 
