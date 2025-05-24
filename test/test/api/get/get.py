@@ -130,7 +130,7 @@ class TestRetrieveViewForHome(generics.ListAPIView):
 
 
 class TestListApiView(generics.ListAPIView):
-    queryset = Test.objects.all()
+    queryset = Test.objects.order_by('-id').all()
     serializer_class = TestListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = TestFilter
