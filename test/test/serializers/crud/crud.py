@@ -56,13 +56,11 @@ class TestUpdateSerializer(serializers.ModelSerializer):
         pprint.pprint(validated_data)
 
         blocks_data = validated_data.pop('blocks', [])
-        field_data = validated_data.pop('field', [])
 
         # Update standard fields
         instance = super().update(instance, validated_data)
 
         # Update many-to-many field
-        instance.field.set(field_data)
 
         # Handle blocks and questions
         for block_data in blocks_data:
