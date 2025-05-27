@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from test.block.serializers.crud.crud import TestBlockSerializer
 from test.models.models import StudentTest
-from test.models.models import Test
+from test.models.models import Test, Subject
 from test.models.test_block import TestBlock
 from test.models.test_question import TestQuestion
 from organizations.models.organization_fields import OrganizationFields
@@ -37,7 +37,7 @@ class TestCreateSerializer(serializers.ModelSerializer):
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
             existing_block = TestBlock.objects.filter(test=test, text=block_data['text']).first()
-            if not existing_block or not  existing_block.image:
+            if not existing_block or not existing_block.image:
                 block = TestBlock.objects.create(test=test, **block_data)
             else:
                 block = existing_block
@@ -54,6 +54,7 @@ class TestUpdateSerializer(serializers.ModelSerializer):
     is_mandatory = serializers.BooleanField(required=False, allow_null=True)
     field = serializers.PrimaryKeyRelatedField(queryset=OrganizationFields.objects.all(), many=True)
     field_data = serializers.SerializerMethodField()
+    subject = serializers.SerializerMethodField()
 
     class Meta:
         model = Test
@@ -97,6 +98,13 @@ class TestUpdateSerializer(serializers.ModelSerializer):
             }
             for field in obj.field.all()
         ]
+
+    def get_subject(self, obj):
+        return {
+            "id": obj.subject.id,
+            "name": obj.subject.name,
+
+        }
 
 
 class StudentTestSerializer(serializers.ModelSerializer):
