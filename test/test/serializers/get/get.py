@@ -5,6 +5,7 @@ from test.models.test_block import TestBlock
 from test.subject.serializers.get.get import SubjectSerializer
 from organizations.organization_fields.serializers.get.retrieve_view import OrganizationFieldsSerializer
 from organizations.organization_fields.serializers.get.list import OrganizationFieldsListSerializers
+from organizations.models.organization_fields import OrganizationFields
 
 
 class TestQuestionSerializerGet(serializers.ModelSerializer):
@@ -33,7 +34,7 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ['id', 'field', 'field_data', 'subject', 'duration', 'blocks', 'number_questions', 'is_mandatory',
-                  'status']
+                  'status', 'organization_type']
 
     def get_field_data(self, obj):
         return [
@@ -47,6 +48,22 @@ class TestRetrieveSerializer(serializers.ModelSerializer):
             }
             for field in obj.field.all()
         ]
+
+    def update(self, instance, validated_data):
+        field_data = validated_data.pop('field', [])
+        organization_type = validated_data.pop('organization_type', None)
+        is_mandatory = validated_data.pop('is_mandatory', None)
+        print(organization_type)
+        field_list = OrganizationFields.objects.filter(organization_type=organization_type)
+        print(field_list)
+        test = super().update(instance, validated_data)
+        if is_mandatory:
+            test.field.set(field_list)
+        else:
+            test.field.set(field_data)
+        test.save()
+
+        return test
 
 
 class TestListSerializer(serializers.ModelSerializer):

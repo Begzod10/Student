@@ -22,19 +22,22 @@ class TestCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         blocks_data = validated_data.pop('blocks', [])
         field_data = validated_data.pop('field', [])
-
+        organization_type = validated_data.pop('organization_type', None)
+        is_mandatory = validated_data.pop('is_mandatory', None)
+        field_list = OrganizationFields.objects.filter(organization_type=organization_type)
         # Create test without the ManyToMany field
         test = Test.objects.create(**validated_data)
-
-        # Assign the ManyToMany field after creation
-        test.field.set(field_data)
-
+        if is_mandatory:
+            test.field.set(field_list)
+        else:
+            test.field.set(field_data)
+        test.save()
         # Create blocks and questions
 
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
             existing_block = TestBlock.objects.filter(test=test, text=block_data['text']).first()
-            if not existing_block or existing_block.image:
+            if not existing_block or not  existing_block.image:
                 block = TestBlock.objects.create(test=test, **block_data)
             else:
                 block = existing_block
@@ -72,7 +75,7 @@ class TestUpdateSerializer(serializers.ModelSerializer):
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
             existing_block = TestBlock.objects.filter(test=instance, text=block_data['text']).first()
-            if not existing_block or existing_block.image:
+            if not existing_block or not existing_block.image:
                 block = TestBlock.objects.create(test=instance, **block_data)
             else:
                 block = existing_block

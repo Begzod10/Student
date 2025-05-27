@@ -11,6 +11,8 @@ class Test(models.Model):
     duration = models.BigIntegerField(null=True, blank=True)
     is_mandatory = models.BooleanField(null=True, blank=True, default=False)
     status = models.BooleanField(null=True, blank=True)
+    organization_type = models.ForeignKey('organizations.OrganizationType', on_delete=models.SET_NULL, null=True,
+                                          blank=True)
 
 
 class StudentTest(models.Model):
@@ -21,7 +23,6 @@ class StudentTest(models.Model):
     field = models.ForeignKey(OrganizationFields, on_delete=models.SET_NULL, null=True, blank=True)
     surname = models.CharField(null=True, blank=True)
     date = models.DateField(null=True, blank=True, default=datetime.date.today)
-
 
 
 class StudentTestResult(models.Model):
