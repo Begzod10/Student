@@ -33,8 +33,7 @@ class TestCreateSerializer(serializers.ModelSerializer):
 
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            existing_block = TestBlock.objects.filter(test=test, text=block_data['text'],
-                                                      image=block_data['image']).first()
+            existing_block = TestBlock.objects.filter(test=test, text=block_data['text']).first()
             if not existing_block or existing_block.image:
                 block = TestBlock.objects.create(test=test, **block_data)
             else:
