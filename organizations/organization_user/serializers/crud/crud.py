@@ -50,6 +50,7 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
         return OrganizationUser.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        get_user = Users.objects.get(id=instance.user.id)
         user_data = validated_data.pop('user', None)
         if user_data:
             if user_data.get('phone'):
@@ -72,6 +73,7 @@ class OrganizationUserCreateUpdateSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+        # get_user.name =
         return instance
 
     def delete(self, instance):

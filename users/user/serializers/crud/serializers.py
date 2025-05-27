@@ -8,15 +8,42 @@ from organizations.models.organization_landing_page import OrganizationLandingPa
 from students.models import Region
 from students.models.student import StudentRequest, Student
 from users.models import Users
+import pprint
 
 
 def retrieve(instance):
     return instance
 
 
+class UserPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = Users
+        fields = ['password']
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance
+
+
+class UserPhotoSerializer(serializers.Serializer):
+    image = serializers.ImageField()
+
+    class Meta:
+        model = Users
+        fields = ['image']
+
+    def update(self, instance, validated_data):
+        instance.image = validated_data['image']
+        instance.save()
+        return instance
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     region = serializers.PrimaryKeyRelatedField(queryset=Region.objects.all(),
-                                                write_only=True)
+                                                write_only=True, required=False, allow_null=True)
     landing = serializers.CharField(write_only=True, required=False, allow_null=True,
                                     allow_blank=True)  # Ensure region is processed correctly
     image = serializers.ImageField(required=False, allow_null=True)
@@ -71,7 +98,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         if role == 'user' and region:  # ✅ Ensure region is not None
             Student.objects.create(user=user, region=region)  # ✅ Assign region to Student
-        if user.passport_seria  and user.passport_pdf1 and user.passport_pdf2 and user.name and user.surname:
+        if user.passport_seria and user.passport_pdf1 and user.passport_pdf2 and user.name and user.surname:
             if landing:
                 landing_page = get_object_or_404(OrganizationLandingPage, id=landing)
                 student = get_object_or_404(Student, user=user)

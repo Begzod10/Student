@@ -8,7 +8,7 @@ from test.models.models import StudentTest
 from test.models.models import Test
 from test.models.test_block import TestBlock
 from test.models.test_question import TestQuestion
-
+from organizations.models.organization_fields import OrganizationFields
 from rest_framework import status
 
 
@@ -17,16 +17,28 @@ class TestCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
-        fields = ['id', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
+        fields = ['id', 'field', 'subject', 'duration', 'blocks', 'is_mandatory', 'status']
 
     def create(self, validated_data):
         blocks_data = validated_data.pop('blocks', [])
+        field_data = validated_data.pop('field', [])
 
+        # Create test without the ManyToMany field
         test = Test.objects.create(**validated_data)
+
+        # Assign the ManyToMany field after creation
+        test.field.set(field_data)
+
+        # Create blocks and questions
 
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            block = TestBlock.objects.create(test=test, **block_data)
+            existing_block = TestBlock.objects.filter(test=test, text=block_data['text'],
+                                                      image=block_data['image']).first()
+            if not existing_block or existing_block.image:
+                block = TestBlock.objects.create(test=test, **block_data)
+            else:
+                block = existing_block
 
             for question_data in questions_data:
                 TestQuestion.objects.create(block=block, test=test, **question_data)
@@ -38,38 +50,57 @@ class TestUpdateSerializer(serializers.ModelSerializer):
     blocks = TestBlockSerializer(many=True, required=False)
     duration = serializers.IntegerField(required=False, allow_null=True)
     is_mandatory = serializers.BooleanField(required=False, allow_null=True)
+    field = serializers.PrimaryKeyRelatedField(queryset=OrganizationFields.objects.all(), many=True)
     field_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Test
-        fields = ['id', 'field_data', 'field', 'subject', 'duration', 'blocks', 'is_mandatory']
+        fields = ['id', 'field_data', 'field', 'subject', 'duration', 'blocks', 'is_mandatory', 'status']
 
     def update(self, instance, validated_data):
-        pprint.pprint(validated_data)
+
         blocks_data = validated_data.pop('blocks', [])
+        # field_data = validated_data.pop('field', [])
+
+        # Update standard fields
+        instance = super().update(instance, validated_data)
+
+        # Update many-to-many field
+        # pprint.pprint(field_data)
+        # instance.field.set(field_data)
+
+        # Handle blocks and questions
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            block, created = TestBlock.objects.get_or_create(test=instance, text=block_data['text'],
-                                                             defaults=block_data)
+            existing_block = TestBlock.objects.filter(test=instance, text=block_data['text']).first()
+            if not existing_block or existing_block.image:
+                block = TestBlock.objects.create(test=instance, **block_data)
+            else:
+                block = existing_block
+
             for question_data in questions_data:
                 TestQuestion.objects.create(block=block, test=instance, **question_data)
 
-        return super().update(instance, validated_data)
+        return instance
 
     def get_field_data(self, obj):
-        return {
-            "id": obj.field.id,
-            "name": obj.field.name,
-            "organization_type": {
-                "id": obj.field.organization_type.id,
-                "name": obj.field.organization_type.name
+        return [
+            {
+                "id": field.id,
+                "name": field.name,
+                "organization_type": {
+                    "id": field.organization_type.id if field.organization_type else None,
+                    "name": field.organization_type.name if field.organization_type else None
+                }
             }
-        }
+            for field in obj.field.all()
+        ]
 
 
 class StudentTestSerializer(serializers.ModelSerializer):
     subject = serializers.SerializerMethodField(read_only=True)
     questions = serializers.SerializerMethodField(read_only=True)
+    field = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = StudentTest
@@ -86,11 +117,33 @@ class StudentTestSerializer(serializers.ModelSerializer):
             )
         return data
 
+    def create(self, validated_data):
+        pprint.pprint(validated_data)
+        student = validated_data.pop('student')
+        name = validated_data.pop('name')
+        surname = validated_data.pop('surname')
+        # student_test = StudentTest.objects.create(student=student, name=name, surname=surname, **validated_data)
+        # return student_test
+
+    def get_field(self, obj):
+        fields = obj.test1.field.all() if obj.test1 else obj.test2.field.all()
+        return [
+            {
+                "id": field.id,
+                "name": field.name,
+                "organization_type": {
+                    "id": field.organization_type.id if field.organization_type else None,
+                    "name": field.organization_type.name if field.organization_type else None
+                }
+            }
+            for field in fields
+        ]
+
     def get_subject(self, obj):
         return [
             {
-                'id': obj.test1.subject.id,
-                'name': obj.test1.subject.name,
+                'id': obj.test1.subject.id if obj.test1.subject else None,
+                'name': obj.test1.subject.name if obj.test1.subject else None,
                 'question_count': 30
             },
             {
@@ -117,7 +170,17 @@ class StudentTestSerializer(serializers.ModelSerializer):
                 'duration': test.duration,
                 'is_mandatory': test.is_mandatory,
                 'subject_id': test.subject_id,
-                'field_id': test.field_id,
+                'field': [
+                    {
+                        "id": field.id,
+                        "name": field.name,
+                        "organization_type": {
+                            "id": field.organization_type.id if field.organization_type else None,
+                            "name": field.organization_type.name if field.organization_type else None
+                        }
+                    }
+                    for field in test.field.all()
+                ],
                 'question_count': TestBlock.objects.filter(test=test).count(),
                 'blocks': []
             }
@@ -148,14 +211,23 @@ class StudentTestSerializer(serializers.ModelSerializer):
         for test in [obj.test1, obj.test2]:
             if not test:
                 continue
-
             test_data = {
                 'id': test.id,
                 'name': test.subject.name if test.subject else None,
                 'duration': test.duration,
                 'is_mandatory': test.is_mandatory,
                 'subject_id': test.subject_id,
-                'field_id': test.field_id,
+                'field': [
+                    {
+                        "id": field.id,
+                        "name": field.name,
+                        "organization_type": {
+                            "id": field.organization_type.id if field.organization_type else None,
+                            "name": field.organization_type.name if field.organization_type else None
+                        }
+                    }
+                    for field in test.field.all()
+                ],
                 'question_count': TestBlock.objects.filter(test=test).count(),
 
                 'blocks': []
@@ -183,5 +255,5 @@ class StudentTestSerializer(serializers.ModelSerializer):
                 test_data['blocks'].append(block_data)
 
             data['optional'].append(test_data)
-
+            pprint.pprint(test_data)
         return data

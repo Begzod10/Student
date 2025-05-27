@@ -67,7 +67,7 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     region = serializers.SerializerMethodField()
-    price = serializers.CharField(source='landing_page.price')
+    price = serializers.SerializerMethodField()
     student_id = serializers.IntegerField(source='student.id')
     accepted = serializers.SerializerMethodField()
 
@@ -77,6 +77,10 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
         model = StudentRequest
         fields = ['id', 'name', 'phone', 'degree', 'shift', 'language', 'date', 'accepted', 'field', 'image', 'region',
                   'price', 'student_id']
+
+    def get_price(self, obj):
+        landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
+        return landig.price if landig else None
 
     def get_language(self, obj):
         landig = OrganizationLandingPage.objects.filter(organization=obj.organization).first()
@@ -108,7 +112,7 @@ class StudentRequestListSerializer(serializers.ModelSerializer):
         return obj.student.user.image if obj.student.user.image else None
 
     def get_region(self, obj):
-        return obj.organization.region.name if obj.organization.region else None
+        return obj.organization.region.name if obj.organization and obj.organization.region else None
 
 
 class StudentRequestProfileSerializers(serializers.ModelSerializer):
@@ -125,7 +129,6 @@ class StudentRequestProfileSerializers(serializers.ModelSerializer):
         fields = [
             'id', 'degree', 'language', 'shift', 'location', 'name',
             'price', 'region',
-
 
             'request_status', 'date'
         ]

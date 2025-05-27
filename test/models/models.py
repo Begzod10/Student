@@ -6,11 +6,11 @@ import datetime
 
 
 class Test(models.Model):
-    field = models.ForeignKey(OrganizationFields, on_delete=models.CASCADE, related_name='blocks', null=True,
-                              blank=True)
+    field = models.ManyToManyField(OrganizationFields, blank=True, null=True, related_name='tests')
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
     duration = models.BigIntegerField(null=True, blank=True)
-    is_mandatory = models.BooleanField(null=True, blank=True)
+    is_mandatory = models.BooleanField(null=True, blank=True, default=False)
+    status = models.BooleanField(null=True, blank=True)
 
 
 class StudentTest(models.Model):
@@ -21,6 +21,7 @@ class StudentTest(models.Model):
     field = models.ForeignKey(OrganizationFields, on_delete=models.SET_NULL, null=True, blank=True)
     surname = models.CharField(null=True, blank=True)
     date = models.DateField(null=True, blank=True, default=datetime.date.today)
+
 
 
 class StudentTestResult(models.Model):

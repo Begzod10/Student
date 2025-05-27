@@ -48,13 +48,13 @@ class NewsViewSet(viewsets.ModelViewSet):
 
 class NewsViewOrganizationList(ListAPIView):
     serializer_class = NewsSerializer
-    queryset = News.objects.order_by('-date').all()  # <--- ADD THIS
+    queryset = News.objects.filter(deleted=False).order_by('-date').all()  # <--- ADD THIS
 
     def get_queryset(self):
         organization_id = self.request.query_params.get('organization_id')
-        if organization_id:
+        if organization_id and organization_id != 'null':
             return self.queryset.filter(organization_id=organization_id, deleted=False)
-        return self.queryset.none()
+        return self.queryset
 
 
 class NewsBlockViewSet(viewsets.ModelViewSet):
