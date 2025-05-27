@@ -32,7 +32,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'field', 'subject', 'duration', 'is_mandatory')
+    list_display = ('id', 'subject', 'duration', 'is_mandatory')
     list_filter = ('field', 'subject', 'is_mandatory')
     search_fields = ('subject__name',)
 
