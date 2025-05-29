@@ -34,3 +34,20 @@ class OrganizationFields2ListView(APIView):
         ).order_by('id')
         serializer = OrganizationFieldsListSerializers(fields, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class OrganizationFieldsFilteredListView(APIView):
+    def get(self, request, pk):
+        if getattr(self, 'swagger_fake_view', False):
+            return Response([], status=status.HTTP_200_OK)
+
+        if pk is None:
+            return Response({'detail': "'pk' not found in URL kwargs."}, status=status.HTTP_400_BAD_REQUEST)
+
+        fields = OrganizationFields.objects.filter(
+            tests__isnull=False,  # has at least one related Test
+            organization_type_id=pk,
+            deleted=False
+        ).distinct().order_by('id')
+        serializer = OrganizationFieldsListSerializers(fields, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
