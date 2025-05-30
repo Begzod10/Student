@@ -22,7 +22,8 @@ dtm_imtihon_fanlari = [
     "Fransuz tili",
     "Koreys tili",
     "Xitoy tili",
-    "Adabiyot"
+    "Adabiyot",
+    "Huquq",
 ]
 
 
