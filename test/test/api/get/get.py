@@ -11,6 +11,7 @@ from test.test.filtersets.testflter import TestFilter
 from test.test.serializers.get.get import TestRetrieveSerializer, TestListSerializer, StudentTestResultSerializer
 import pprint
 from organizations.models.organization_fields import OrganizationFields
+from students.models.student import Student
 
 
 class TestRetrieveView(generics.RetrieveAPIView):
@@ -31,6 +32,8 @@ class TestRetrieveViewForHome(generics.ListAPIView):
         name = request.query_params.get('name')
         surname = request.query_params.get('surname')
         student = request.query_params.get('student')
+        student = int(student) if student else None
+        student = Student.objects.filter(id=student).first()
         field_id = request.query_params.get('field')
         field_id = int(field_id) if field_id else None
         get_field = OrganizationFields.objects.filter(id=field_id).first()

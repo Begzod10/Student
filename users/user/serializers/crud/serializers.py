@@ -146,7 +146,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         phone = attrs.get('phone')
         password = attrs.get('password')
-
         user = authenticate(phone=phone, password=password)
         if not user:
             user = authenticate(username=phone, password=password)

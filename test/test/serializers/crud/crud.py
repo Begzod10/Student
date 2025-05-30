@@ -75,8 +75,14 @@ class TestUpdateSerializer(serializers.ModelSerializer):
         # Handle blocks and questions
         for block_data in blocks_data:
             questions_data = block_data.pop('questions', [])
-            existing_block = TestBlock.objects.filter(test=instance, text=block_data['text']).first()
-            if not existing_block or not existing_block.image:
+            last_index = TestBlock.objects.filter(test=instance).order_by('-id').first()
+      
+            block_data['index'] = last_index.index + 1 if last_index and last_index.index is not None else 0
+
+            existing_block = TestBlock.objects.filter(test=instance, text=block_data['text'],
+                                                      index=block_data['index']).first()
+
+            if not existing_block:
                 block = TestBlock.objects.create(test=instance, **block_data)
             else:
                 block = existing_block
@@ -101,8 +107,8 @@ class TestUpdateSerializer(serializers.ModelSerializer):
 
     def get_subject(self, obj):
         return {
-            "id": obj.subject.id,
-            "name": obj.subject.name,
+            "id": obj.subject.id if obj.subject else None,
+            "name": obj.subject.name if obj.subject else None,
 
         }
 
